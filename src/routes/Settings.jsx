@@ -1,9 +1,9 @@
 import FixedBottomNavigation from '../components/Navigation';
 
-export default function Diagnosis() {
+export default function Settings() {
   return (
     <div>
-      <h1>Diagnosis</h1>
+      <h1>Settings</h1>
       <FixedBottomNavigation />
     </div>
   );
