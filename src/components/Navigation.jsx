@@ -71,36 +71,36 @@ const messageExamples = [
   {
     primary: '今週ブランチに行こうか？',
     secondary: '今週、近所にいる予定です。一緒に食事をしましょう。',
-    person: './assets/cats.png',
+    person: 'https://avatars.githubusercontent.com/u/161946679?s=400&u=552f7dd7cfecee98123c085ca53f0329fbecd55e&v=4',
   },
   {
     primary: '誕生日プレゼント',
     secondary: `ジョンの仕事の記念日に良いプレゼントの提案はありますか？私は本当に迷っています。あなたの考えを聞きたいです。`,
-    person: './assets/cats.png',
+    person: 'https://avatars.githubusercontent.com/u/161946679?s=400&u=552f7dd7cfecee98123c085ca53f0329fbecd55e&v=4',
   },
   {
     primary: '試してみるレシピ',
     secondary: '新しいバーベキューのレシピを試しています。これは素晴らしいと思います。',
-    person: './assets/cats.png',
+    person: 'https://avatars.githubusercontent.com/u/161946679?s=400&u=552f7dd7cfecee98123c085ca53f0329fbecd55e&v=4',
   },
   {
     primary: 'はい！',
     secondary: '今年のReactConfのチケットを持っています。',
-    person: './assets/cats.png',
+    person: 'https://avatars.githubusercontent.com/u/161946679?s=400&u=552f7dd7cfecee98123c085ca53f0329fbecd55e&v=4',
   },
   {
     primary: '医者の予約',
     secondary: '私の医者への予約が来週の土曜日に変更されました。',
-    person: './assets/cats.png',
+    person: 'https://avatars.githubusercontent.com/u/161946679?s=400&u=552f7dd7cfecee98123c085ca53f0329fbecd55e&v=4',
   },
   {
     primary: '議論',
     secondary: `ボトムアプリバー（下部ナビゲーションドロワーやオーバーフローメニューなど）によって生成されたメニューは、バーのより高い位置でボトムシートとして開きます。`,
-    person: './assets/cats.png',
+    person: 'https://avatars.githubusercontent.com/u/161946679?s=400&u=552f7dd7cfecee98123c085ca53f0329fbecd55e&v=4',
   },
   {
     primary: '夏のバーベキュー',
     secondary: `誰が今週末にバーベキューをしませんか？私は裏庭に新しい家具を手に入れたので、グリルを使って料理をしたいと思います。`,
-    person: './assets/cats.png',
+    person: 'https://avatars.githubusercontent.com/u/161946679?s=400&u=552f7dd7cfecee98123c085ca53f0329fbecd55e&v=4',
   },
 ];
