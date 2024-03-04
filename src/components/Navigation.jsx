@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -14,6 +13,10 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
+import Information from '../routes/Information';
+import Consultation from '../routes/Consultation';
+import Diagnosis from '../routes/Diagnosis';
+import Settings from '../routes/Settings';
 
 function refreshMessages() {
   const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max));
@@ -22,6 +25,7 @@ function refreshMessages() {
 }
 
 export default function FixedBottomNavigation() {
+  const pages = { 0: <Consultation />, 1: <Information />, 2: <Diagnosis />, 3: <Settings /> };
   const [value, setValue] = React.useState(0);
   const ref = React.useRef(null);
   const [messages, setMessages] = React.useState(() => refreshMessages());
@@ -33,6 +37,7 @@ export default function FixedBottomNavigation() {
 
   return (
     <Box sx={{ pb: 7 }} ref={ref}>
+      {pages[value]}
       <CssBaseline />
       <List>
         {messages.map(({ primary, secondary, person }, index) => (
@@ -44,7 +49,7 @@ export default function FixedBottomNavigation() {
           </ListItemButton>
         ))}
       </List>
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={4}>
         <BottomNavigation
           showLabels
           value={value}
@@ -52,18 +57,10 @@ export default function FixedBottomNavigation() {
             setValue(newValue);
           }}
         >
-          <Link to="/information" style={{ alignSelf: 'center' }}>
-            <BottomNavigationAction label="ひろば" showLabel icon={<QuestionAnswerRoundedIcon />} />
-          </Link>
-          <Link to="/consultation" style={{ alignSelf: 'center' }}>
-            <BottomNavigationAction label="よみもの" showLabel icon={<MenuBookRoundedIcon />} />
-          </Link>
-          <Link to="/diagnosis" style={{ alignSelf: 'center' }}>
-            <BottomNavigationAction label="お知らせ" showLabel icon={<NotificationsNoneRoundedIcon />} />
-          </Link>
-          <Link to="/diagnosis" style={{ alignSelf: 'center' }}>
-            <BottomNavigationAction label="メニュー" showLabel icon={<SentimentSatisfiedRoundedIcon />} />
-          </Link>
+          <BottomNavigationAction label="ひろば" showLabel icon={<QuestionAnswerRoundedIcon />} />
+          <BottomNavigationAction label="よみもの" showLabel icon={<MenuBookRoundedIcon />} />
+          <BottomNavigationAction label="お知らせ" showLabel icon={<NotificationsNoneRoundedIcon />} />
+          <BottomNavigationAction label="メニュー" showLabel icon={<SentimentSatisfiedRoundedIcon />} />
         </BottomNavigation>
       </Paper>
     </Box>

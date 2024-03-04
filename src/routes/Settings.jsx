@@ -1,10 +1,7 @@
-import FixedBottomNavigation from '../components/Navigation';
-
 export default function Settings() {
   return (
     <div>
       <h1>Settings</h1>
-      <FixedBottomNavigation />
     </div>
   );
 }
