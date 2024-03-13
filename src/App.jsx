@@ -1,9 +1,10 @@
 import { Suspense } from 'react';
 import AppRoutes from './AppRoutes';
+import Loading from './components/Loading';
 
 const App = () => {
   return (
-    <Suspense fallback={<p>loading...</p>}>
+    <Suspense fallback={<Loading />}>
       <AppRoutes />
     </Suspense>
   );

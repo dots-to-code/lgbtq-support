@@ -1,15 +1,29 @@
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import Login from './routes/Login';
 import Home from './routes/Home';
 import ErrorPage from './routes/ErrorPage';
+import Loading from './components/Loading';
 
 function AppRoutes() {
+  const { isLoading, error, isAuthenticated } = useAuth0();
+
+  if (error) {
+    return <ErrorPage />;
+  }
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <Routes>
-      <Route path="/" exact element={<Login />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="*" element={<ErrorPage />} />
-    </Routes>
+    <Router history={history}>
+      <Routes>
+        <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <Login />} />
+        <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/" />} />
+        <Route path="*" element={isAuthenticated ? <ErrorPage /> : <Navigate to="/" />} />
+      </Routes>
+    </Router>
   );
 }
 

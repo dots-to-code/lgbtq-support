@@ -1,11 +1,5 @@
-import { Link } from 'react-router-dom';
+import LoginButton from '../components/LoginButton';
 
 export default function Login() {
-  return (
-    <div>
-      <Link to="/home">
-        <button>Login</button>
-      </Link>
-    </div>
-  );
+  return <LoginButton />;
 }
