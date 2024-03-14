@@ -3,6 +3,10 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-style: normal;
+  font-optical-sizing: auto;
+  font-weight: 300;
 }
 
 .logo {

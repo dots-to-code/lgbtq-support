@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Noto Sans JP', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 }
@@ -68,7 +68,6 @@ hr {
  */
 
 pre {
-  font-family: monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
 }
 
@@ -111,7 +110,6 @@ strong {
 code,
 kbd,
 samp {
-  font-family: monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
 }
 
