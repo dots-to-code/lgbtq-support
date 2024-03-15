@@ -9,11 +9,7 @@ import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneR
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import Paper from '@mui/material/Paper';
-import Information from '../routes/Information';
-import Consultation from '../routes/Consultation';
-import Diagnosis from '../routes/Diagnosis';
-import Settings from '../routes/Settings';
-import Share from '../routes/Share';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function FixedBottomNavigation() {
   const navButtonStyling = {
@@ -26,22 +22,21 @@ export default function FixedBottomNavigation() {
       fontSize: '10px',
     },
   };
-  const pages = { 0: <Consultation />, 1: <Share />, 2: <Information />, 3: <Diagnosis />, 4: <Settings /> };
-  const [value, setValue] = React.useState(0);
+  const pageUrls = ['/consultation', '/share', '/diagnosis', '/information', '/settings'];
+  const location = useLocation();
+  const [value, setValue] = React.useState(pageUrls.findIndex((url) => url === location.pathname) || 0);
   const ref = React.useRef(null);
+  const navigate = useNavigate();
+  const handleClickNavigation = (event, newValue) => {
+    setValue(newValue);
+    navigate(pageUrls[newValue]);
+  };
 
   return (
     <Box sx={{ pb: 7 }} ref={ref}>
-      {pages[value]}
       <CssBaseline />
       <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={5}>
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-        >
+        <BottomNavigation showLabels value={value} onChange={handleClickNavigation}>
           <BottomNavigationAction sx={navButtonStyling} label="相談" showLabel icon={<QuestionAnswerRoundedIcon />} />
           <BottomNavigationAction sx={navButtonStyling} label="シェア" showLabel icon={<MenuBookRoundedIcon />} />
           <BottomNavigationAction sx={navButtonStyling} label="診断" showLabel icon={<FavoriteBorderRoundedIcon />} />

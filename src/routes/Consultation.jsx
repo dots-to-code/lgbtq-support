@@ -1,7 +1,9 @@
+import { BaseLayout } from '../components/BaseLayout';
+
 export default function Consultation() {
   return (
-    <div>
+    <BaseLayout>
       <h1>Consultation</h1>
-    </div>
+    </BaseLayout>
   );
 }

@@ -1,7 +1,9 @@
+import { BaseLayout } from '../components/BaseLayout';
+
 export default function Diagnosis() {
   return (
-    <div>
+    <BaseLayout>
       <h1>Diagnosis</h1>
-    </div>
+    </BaseLayout>
   );
 }
