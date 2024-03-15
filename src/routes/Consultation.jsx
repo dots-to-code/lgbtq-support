@@ -1,9 +1,11 @@
 import { BaseLayout } from '../components/BaseLayout';
-import { Container, List, ListItem, ListItemText, Typography, Divider } from '@mui/material';
+import { Container, List, ListItem, ListItemText, Typography } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { GENDER } from '../constants';
+import { useNavigate } from 'react-router-dom';
 
 export default function Consultation() {
+  const navigate = useNavigate();
   const datas = [
     {
       id: 1,
@@ -87,15 +89,15 @@ export default function Consultation() {
       });
     };
 
-    const handleClick = (id) => () => {
-      console.log('id:', id);
+    const handleClickDetail = (id) => () => {
+      navigate(`/consultation/${id}`);
     };
 
     return (
       <List sx={{ width: '100%', maxWidth: 850 }}>
         {list.map((item) => (
           <>
-            <ListItem key={item.id} sx={ListItemStyle} onClick={handleClick(item.id)}>
+            <ListItem key={item.id} sx={ListItemStyle} onClick={handleClickDetail(item.id)}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
                 <ListItemText
