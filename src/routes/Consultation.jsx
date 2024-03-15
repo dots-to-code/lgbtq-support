@@ -1,8 +1,9 @@
 import { BaseLayout } from '../components/BaseLayout';
-import { Container, List, ListItem, ListItemText, Typography, Button } from '@mui/material';
+import { Container, List, ListItem, ListItemText, Typography, Button, Box } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { GENDER } from '../constants';
 import { useNavigate } from 'react-router-dom';
+import { SearchInput } from '../components/SearchInput';
 
 export default function Consultation() {
   const navigate = useNavigate();
@@ -165,8 +166,11 @@ export default function Consultation() {
 
   return (
     <BaseLayout>
+      <Box sx={{ m: 4, display: 'flex', justifyContent: 'center' }}>
+        <SearchInput />
+      </Box>
       <Container maxWidth="sm" sx={{ p: 0, position: 'relative' }}>
-        <ConsultationList list={[].concat(datas, datas, datas, datas)} />
+        <ConsultationList list={[].concat(datas, datas)} />
         <Button sx={ButtonStyle} variant="contained" onClick={handlePost}>
           相談する
         </Button>
