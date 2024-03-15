@@ -1,7 +1,9 @@
+import { BaseLayout } from '../components/BaseLayout';
+
 export default function Share() {
   return (
-    <div>
+    <BaseLayout>
       <h1>Share</h1>
-    </div>
+    </BaseLayout>
   );
 }
