@@ -1,5 +1,5 @@
 import { BaseLayout } from '../components/BaseLayout';
-import { Container, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Container, List, ListItem, ListItemText, Typography, Button } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { GENDER } from '../constants';
 import { useNavigate } from 'react-router-dom';
@@ -78,6 +78,33 @@ export default function Consultation() {
     },
   };
 
+  const ButtonStyle = {
+    position: 'fixed',
+    bottom: '88px',
+    right: '16px',
+    height: '54px',
+    borderRadius: '16px',
+    backgroundColor: '#EB6159',
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      margin: 0,
+      bottom: '-16px',
+      left: '16px',
+      width: 0,
+      height: 0,
+      borderTop: '30px solid #EB6159',
+      borderLeft: '12px solid transparent',
+      borderRight: '12px solid transparent',
+      transform: 'rotate(35deg)',
+      zIndex: '-1',
+    },
+    '&:hover': {
+      backgroundColor: '#EB6159',
+      opacity: 0.7,
+    },
+  };
+
   const ConsultationList = ({ list }) => {
     const displayChilden = (children) => {
       return children.map((child, index) => {
@@ -132,10 +159,17 @@ export default function Consultation() {
     );
   };
 
+  const handlePost = () => {
+    navigate('/consultation/post');
+  };
+
   return (
     <BaseLayout>
-      <Container maxWidth="sm" sx={{ p: 0 }}>
+      <Container maxWidth="sm" sx={{ p: 0, position: 'relative' }}>
         <ConsultationList list={[].concat(datas, datas, datas, datas)} />
+        <Button sx={ButtonStyle} variant="contained" onClick={handlePost}>
+          相談する
+        </Button>
       </Container>
     </BaseLayout>
   );
