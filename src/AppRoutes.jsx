@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuth0 } from '@auth0/auth0-react';
 import Login from './routes/Login';
 import Consultation from './routes/Consultation';
+import ConsultationDetail from './routes/ConsultationDetail';
+import ConsultationPost from './routes/ConsultationPost';
 import Share from './routes/Share';
 import Diagnosis from './routes/Diagnosis';
 import Information from './routes/Information';
@@ -25,6 +27,8 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={isAuthenticated ? <Navigate to="/consultation" /> : <Login />} />
         <Route path="/consultation" element={isAuthenticated ? <Consultation /> : <Navigate to="/" />} />
+        <Route path="/consultation/:id" element={isAuthenticated ? <ConsultationDetail /> : <Navigate to="/" />} />
+        <Route path="/consultation/post" element={isAuthenticated ? <ConsultationPost /> : <Navigate to="/" />} />
         <Route path="/share" element={isAuthenticated ? <Share /> : <Navigate to="/" />} />
         <Route path="/diagnosis" element={isAuthenticated ? <Diagnosis /> : <Navigate to="/" />} />
         <Route path="/information" element={isAuthenticated ? <Information /> : <Navigate to="/" />} />
