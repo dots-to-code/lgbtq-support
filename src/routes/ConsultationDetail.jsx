@@ -130,7 +130,7 @@ export default function ConsultationDetail({ id }) {
   const ConsultationResponseList = ({ list }) => {
 
     return list.map((item, index) => (
-      <SpeechBubble key={index} user={item}>
+      <SpeechBubble key={index} user={item} isDispGoodIcon="true">
         <Typography>{item.content}</Typography>
       </SpeechBubble>
     ));
@@ -147,7 +147,7 @@ export default function ConsultationDetail({ id }) {
         <SearchInput />
       </Box>
       <Container maxWidth="sm" sx={ContainerStyle}>
-        <SpeechBubble user={data}>
+        <SpeechBubble user={data} isDispFavoButoon="true">
           <Typography>{data.content}</Typography>
         </SpeechBubble>
         <ConsultationResponseList list={responses}/>

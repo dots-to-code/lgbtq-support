@@ -1,7 +1,9 @@
 import { UserInfo } from '../components/UserInfo';
-import { Paper, Box } from '@mui/material';
+import { Paper, Box, Button } from '@mui/material';
+import FilterVintageIcon from '@mui/icons-material/FilterVintage';
+import StarsSharpIcon from '@mui/icons-material/StarsSharp';
 
-export const SpeechBubble = ({ children, user, customStyle }) => {
+export const SpeechBubble = ({ children, user, customStyle, isDispGoodIcon = false, isDispFavoButoon = false}) => {
 
     const PaperStyle = {
         width: '90%',
@@ -32,10 +34,64 @@ export const SpeechBubble = ({ children, user, customStyle }) => {
         //   },
     };
 
+    const GoodIconStyle = {
+        margin: '10px',
+        color: '#EB6159',
+        '&:hover': {
+            color: '#EB6159',
+            opacity: 0.7,
+        },
+    }
+
+    const BoxStyle ={
+        width: '100%',
+        alignItems: 'flex-start',
+        display: 'flex',
+        justifyContent: 'space-between'
+    }
+
+    const handleGood = () => {
+        // DBに登録する？色変える？
+        window.alert('イイねボタンクリック');
+    }
+
+    const handleFavo = () => {
+        // DBに登録する？色変える？
+        window.alert('お気に入りボタンクリック');
+    }
+
+    const FavoriteButton = () => {
+
+        // TODO レイアウト調整がまだで、現在スマホサイズで表示すると見切れます
+        const ButtonStyle = {
+            width: '72px',
+            height: '20px',
+            borderRadius: '999px',
+            backgroundColor: '#EB6159',
+            color: '#FFFFFF',
+            fontWeight: 'bold',
+            textTransform: 'none',
+            '&:hover': {
+              backgroundColor: '#EB6159',
+              opacity: 0.7,
+            },
+        };
+
+        return (
+            <Button sx={ButtonStyle}>お気に入り<StarsSharpIcon fontSize={'small'} sx={{ marginLeft: "5px"}}/></Button>
+        );
+    }
+
     return (
         <Paper sx={PaperStyle}>
-            <Box sx={{ width: '100%', alignItems: 'flex-start' }}>
+            <Box sx={BoxStyle}>
                 <UserInfo user={user} />
+                {
+                    isDispGoodIcon ? <FilterVintageIcon fontSize={'large'} sx={GoodIconStyle} onClick={handleGood}/> : ''
+                }
+                {
+                    isDispFavoButoon ? <FavoriteButton onClick={handleFavo}/> : ''
+                }
             </Box>
             {children}
         </Paper>
