@@ -19,7 +19,6 @@ export const UserInfo = ({ user }) => {
     const UserInfoStyle = {
         display: 'flex',
         flexDirection: 'column',
-        fontSize: '12px',
     };
 
     const ChildrenStyle = {
