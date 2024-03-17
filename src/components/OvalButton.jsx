@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 
-export const OvalButton = ({ children }) => {
+export const OvalButton = ({ children, disabled }) => {
 
     const ButtonStyle = {
         width: '200px',
@@ -15,6 +15,6 @@ export const OvalButton = ({ children }) => {
         },
     };
 
-    return <Button sx={ButtonStyle}>{children}</Button>
+    return <Button sx={ButtonStyle} disabled={disabled}>{children}</Button>
 
 };
