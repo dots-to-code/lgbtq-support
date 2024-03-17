@@ -130,7 +130,7 @@ export default function ConsultationDetail({ id }) {
   const ConsultationResponseList = ({ list }) => {
 
     return list.map((item, index) => (
-      <SpeechBubble key={index} user={item} isDispGoodIcon="true">
+      <SpeechBubble key={index} user={item}>
         <Typography>{item.content}</Typography>
       </SpeechBubble>
     ));

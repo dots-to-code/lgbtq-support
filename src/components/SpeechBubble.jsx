@@ -3,7 +3,7 @@ import { Paper, Box, Button } from '@mui/material';
 import FilterVintageIcon from '@mui/icons-material/FilterVintage';
 import StarsSharpIcon from '@mui/icons-material/StarsSharp';
 
-export const SpeechBubble = ({ children, user, customStyle, isDispGoodIcon = false, isDispFavoButoon = false}) => {
+export const SpeechBubble = ({ children, user, customStyle, isDispFavoButoon = false}) => {
 
     const PaperStyle = {
         width: '90%',
@@ -50,11 +50,6 @@ export const SpeechBubble = ({ children, user, customStyle, isDispGoodIcon = fal
         justifyContent: 'space-between'
     }
 
-    const handleGood = () => {
-        // DBに登録する？色変える？
-        window.alert('イイねボタンクリック');
-    }
-
     const handleFavo = () => {
         // DBに登録する？色変える？
         window.alert('お気に入りボタンクリック');
@@ -86,9 +81,6 @@ export const SpeechBubble = ({ children, user, customStyle, isDispGoodIcon = fal
         <Paper sx={PaperStyle}>
             <Box sx={BoxStyle}>
                 <UserInfo user={user} />
-                {
-                    isDispGoodIcon ? <FilterVintageIcon fontSize={'large'} sx={GoodIconStyle} onClick={handleGood}/> : ''
-                }
                 {
                     isDispFavoButoon ? <FavoriteButton onClick={handleFavo}/> : ''
                 }
