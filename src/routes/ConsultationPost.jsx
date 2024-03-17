@@ -40,6 +40,10 @@ export default function ConsultationPost() {
     backgroundColor: '#E3E3E3',
   };
 
+  const handlePost = () => {
+    // DBへの登録処理
+    window.alert('相談登録処理');
+  }
 
   return (
     <BaseLayout>
@@ -52,7 +56,7 @@ export default function ConsultationPost() {
               variant="outlined"
               sx={TextFieldStyle}/>
           </SpeechBubble>
-        <OvalButton>相談を投稿する</OvalButton>
+        <OvalButton onClick={handlePost}>相談を投稿する</OvalButton>
       </Container>
     </BaseLayout>
   );
