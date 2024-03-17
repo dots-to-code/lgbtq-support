@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 
-export const OvalButton = ({ children, disabled }) => {
+export const OvalButton = ({ children, disabled = false }) => {
 
     const ButtonStyle = {
         width: '200px',
