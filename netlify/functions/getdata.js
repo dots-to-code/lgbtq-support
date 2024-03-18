@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const { config } = require('dotenv');
 config();
 const Airtable = require('airtable');

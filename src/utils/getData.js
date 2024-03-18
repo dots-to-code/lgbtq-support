@@ -1,5 +1,10 @@
-export async function getData() {
-  const rawResponse = await fetch('http://localhost:8888/.netlify/functions/hello?name=you');
-  const data = await rawResponse.json();
-  return data;
-}
+const getData = () => {
+  return fetch(`/.netlify/functions/getdata`)
+    .then((result) => result.json())
+    .then((result) => {
+      return result.records;
+    })
+    .catch((err) => console.error(err));
+};
+
+export { getData };
