@@ -8,12 +8,19 @@ import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '../components/SearchInput';
 
 export default function Consultation() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    const airtableData = await getData();
+    return airtableData;
+  };
 
   useEffect(() => {
-    getData().then((airtableData) => setData(airtableData));
-    console.log('DATA', data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getData = async () => {
+      const result = await fetchData();
+      setData(result);
+    };
+    getData();
   }, []);
 
   const navigate = useNavigate();
@@ -133,6 +140,13 @@ export default function Consultation() {
 
     return (
       <List sx={{ width: '100%', maxWidth: 850 }}>
+        {data.map((a) => (
+          <>
+            <p>{a.id}</p>
+            <p>{a.fields.Name}</p>
+            <p>{a.fields.Notes}</p>
+          </>
+        ))}
         {list.map((item) => (
           <>
             <ListItem key={item.id} sx={ListItemStyle} onClick={handleClickDetail(item.id)}>

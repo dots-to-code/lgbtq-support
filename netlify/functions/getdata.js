@@ -1,43 +1,32 @@
-/* eslint-disable no-undef */
 const { config } = require('dotenv');
 config();
-const Airtable = require('airtable');
+const axios = require('axios');
 
-Airtable.configure({
-  endpointUrl: 'https://api.airtable.com',
-  apiKey: process.env.AIRTABLE_PERSONAL_TOKEN,
-});
+exports.handler = async () => {
+  const URL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/penfamily`;
+  try {
+    const response = await axios.get(URL, {
+      headers: {
+        Authorization: `Bearer ${process.env.AIRTABLE_PERSONAL_TOKEN}`,
+      },
+    });
 
-const base = Airtable.base(process.env.AIRTABLE_BASE);
-
-exports.handler = (event, context, callback) => {
-  const allRecords = [];
-  base('penfamily')
-    .select({
-      view: 'Grid view',
-    })
-    .eachPage(
-      (page = (records, fetchNextPage) => {
-        records.forEach((record) => {
-          allRecords.push(record);
-        });
-        fetchNextPage();
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response.data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+  } catch (error) {
+    return {
+      statusCode: error.response ? error.response.status : 500,
+      body: JSON.stringify({
+        error: error.message,
       }),
-      (done = (err) => {
-        if (err) {
-          callback(err);
-        } else {
-          const body = JSON.stringify({ records: allRecords });
-          const response = {
-            statusCode: 200,
-            body: body,
-            headers: {
-              'content-type': 'application/json',
-              'cache-control': 'Cache-Control: max-age=300, public',
-            },
-          };
-          callback(null, response);
-        }
-      }),
-    );
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+  }
 };
