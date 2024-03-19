@@ -18,7 +18,6 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.11",
     "@mui/material": "^5.15.11",
-    "@netlify/functions": "^2.6.0",
     "airtable": "^0.12.2",
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",
