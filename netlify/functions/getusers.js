@@ -3,7 +3,7 @@ config();
 const axios = require('axios');
 
 exports.handler = async () => {
-  const URL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/penfamily`;
+  const URL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/users`;
   try {
     const response = await axios.get(URL, {
       headers: {

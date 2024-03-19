@@ -1,5 +1,5 @@
-const getData = () => {
-  return fetch(`/.netlify/functions/getdata`)
+const getData = (table) => {
+  return fetch(`/.netlify/functions/get${table}`)
     .then((result) => result.json())
     .then((result) => {
       return result.records;

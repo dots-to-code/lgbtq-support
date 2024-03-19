@@ -18,11 +18,13 @@ cd lgbtq-support
 
 npm i
 
-touch .env
+touch .env // add secret keys to your local .env file
 ```
 
 see .env.example and replace .env variables with your API keys
 
 To run the project locally:
 
-`netlify dev`
+```
+netlify dev
+```
