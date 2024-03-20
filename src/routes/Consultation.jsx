@@ -6,9 +6,12 @@ import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { GENDER } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '../components/SearchInput';
+import Loading from '../components/Loading';
 
 export default function Consultation() {
   const [data, setData] = useState([]);
+
+  if (!data) <Loading />;
 
   const fetchData = async () => {
     const airtableData = await getData('users');

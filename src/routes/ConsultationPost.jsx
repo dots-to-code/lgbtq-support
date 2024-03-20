@@ -10,7 +10,8 @@ export default function ConsultationPost() {
   const user = {
     id: 1,
     name: 'コウテイペンギン',
-    content: '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
+    content:
+      '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
     children: [
       {
         id: 1,
@@ -67,7 +68,9 @@ export default function ConsultationPost() {
             sx={TextFieldStyle}
           />
         </SpeechBubble>
-        <OvalButton onClick={handlePost} disabled={!inputValue.trim()}>相談を投稿する</OvalButton>
+        <OvalButton onClick={handlePost} disabled={!inputValue.trim()}>
+          相談を投稿する
+        </OvalButton>
       </Container>
     </BaseLayout>
   );

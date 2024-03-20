@@ -13,9 +13,7 @@ import ErrorPage from './routes/ErrorPage';
 import Loading from './components/Loading';
 
 function AppRoutes() {
-  const { isLoading, error, isAuthenticated, user } = useAuth0();
-
-  console.log('USER', user);
+  const { isLoading, error, isAuthenticated } = useAuth0();
 
   if (error) {
     return <ErrorPage />;
