@@ -18,11 +18,11 @@ exports.handler = async (event) => {
       },
     });
 
-    // If user already exists, return 405 error
+    // If user already exists, return silently with 200 status code
     if (checkResponse.data.records.length > 0) {
       return {
-        statusCode: 405,
-        body: JSON.stringify({ message: 'User already exists' }),
+        statusCode: 200,
+        body: JSON.stringify({ records: [] }),
         headers: {
           'Content-Type': 'application/json',
         },

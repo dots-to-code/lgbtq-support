@@ -25,9 +25,7 @@ export default function Consultation() {
       setData(result);
     };
     getData();
-  }, []);
 
-  useEffect(() => {
     const newUser = {
       records: [
         {
@@ -41,7 +39,7 @@ export default function Consultation() {
 
     const postUser = async () => {
       const result = await postNewUser(newUser);
-      console.log('RESPONSE', result);
+      console.log('RESPONSE', result && result);
     };
     postUser();
   }, []);
