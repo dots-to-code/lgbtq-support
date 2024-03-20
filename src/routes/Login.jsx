@@ -1,15 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import LoginButton from '../components/LoginButton';
-
-const TitleStyle = {
-  fontSize: '80px',
-  fontFamily: '"Bungee", sans-serif',
-  fontWeight: 900,
-  textShadow: '5px 5px 0 #847c7c',
-  textTransform: 'uppercase',
-  color: '#EB6159',
-  lineHeight: 0.9,
-};
+import { TitleStyle } from '../styles';
 
 export default function Login() {
   return (
