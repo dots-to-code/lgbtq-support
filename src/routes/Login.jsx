@@ -4,7 +4,9 @@ import { TitleStyle } from '../styles';
 
 export default function Login() {
   return (
-    <Stack sx={{ textAlign: 'center', height: '100vh', justifyContent: 'space-evenly' }}>
+    <Stack
+      sx={{ textAlign: 'center', height: '100vh', justifyContent: 'space-evenly', maxWidth: '700px', margin: '0 auto' }}
+    >
       <Box sx={{ margin: '20px 0' }}>
         <Typography sx={TitleStyle}>PEN</Typography>
         <Typography sx={TitleStyle}>FAM</Typography>
