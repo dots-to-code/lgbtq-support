@@ -39,7 +39,7 @@ export default function Consultation() {
 
     const postUser = async () => {
       const result = await postNewUser(newUser);
-      console.log('RESPONSE', result && result);
+      if (result) console.log('RESPONSE', result);
     };
     postUser();
   }, []);
