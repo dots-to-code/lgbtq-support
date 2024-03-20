@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { useAuth0 } from '@auth0/auth0-react';
 import { getData } from '../utils/getData';
 import { postNewUser } from '../utils/postNewUser';
 import { BaseLayout } from '../components/BaseLayout';
@@ -8,40 +10,46 @@ import { GENDER } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '../components/SearchInput';
 import Loading from '../components/Loading';
+import { usersListState } from '../state';
 
 export default function Consultation() {
-  const [data, setData] = useState([]);
+  const { user } = useAuth0();
+  const [users, setUsers] = useRecoilState(usersListState);
+  const [loading, setIsLoading] = useState(false);
 
-  if (!data) <Loading />;
-
-  const fetchData = async () => {
-    const airtableData = await getData('users');
-    return airtableData;
-  };
+  if (!users) <Loading />;
 
   useEffect(() => {
-    const getData = async () => {
-      const result = await fetchData();
-      setData(result);
-    };
-    getData();
+    setIsLoading(true);
 
-    const newUser = {
-      records: [
-        {
-          fields: {
-            name: 'Mickey Mouse',
-            email: 'mickey.mouse@gmail.com',
+    const registerUserAndGetData = async () => {
+      const loggedUser = {
+        records: [
+          {
+            fields: {
+              name: user.name,
+              email: user.email,
+            },
           },
-        },
-      ],
+        ],
+      };
+
+      (async () => {
+        try {
+          // eslint-disable-next-line no-unused-vars
+          const newUser = await postNewUser(loggedUser);
+          const usersRes = await getData('users');
+          setUsers(usersRes);
+          setIsLoading(false);
+        } catch (error) {
+          setIsLoading(false);
+          console.error('An error occurred:', error);
+        }
+      })();
     };
 
-    const postUser = async () => {
-      const result = await postNewUser(newUser);
-      if (result) console.log('RESPONSE', result);
-    };
-    postUser();
+    registerUserAndGetData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const navigate = useNavigate();
@@ -109,17 +117,25 @@ export default function Consultation() {
 
     return (
       <Stack sx={{ width: '100%', maxWidth: 850 }}>
-        {data.map((item) => (
+        {loading && <Loading size={'50px'} />}
+        {users.map((item) => (
           <Box key={`box-${item.id}`} sx={ListItemStyle} onClick={handleClickDetail(item.id)}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
-              <ListItemText
-                primary={item.fields.name}
-                secondary={displayChilden(JSON.parse(item.fields.children).children)}
-                secondaryTypographyProps={{
-                  color: '#000',
-                }}
-              />
+              {
+                <ListItemText
+                  primary={item.fields.name}
+                  secondary={
+                    (item.fields.children &&
+                      JSON.parse(item.fields.children).length &&
+                      displayChilden(JSON.parse(item.fields.children))) ||
+                    '-'
+                  }
+                  secondaryTypographyProps={{
+                    color: '#000',
+                  }}
+                />
+              }
             </div>
             <Typography
               sx={{
@@ -129,7 +145,7 @@ export default function Consultation() {
                 overflow: 'hidden',
               }}
             >
-              {item.fields.content}
+              {item.fields.content || '-'}
             </Typography>
           </Box>
         ))}
