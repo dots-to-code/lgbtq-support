@@ -1,68 +1,29 @@
+import { useState, useEffect } from 'react';
+import { getData } from '../utils/getData';
 import { BaseLayout } from '../components/BaseLayout';
-import { Container, List, ListItem, ListItemText, Typography, Button, Box } from '@mui/material';
+import { Container, Stack, ListItemText, Typography, Button, Box } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { GENDER } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '../components/SearchInput';
 
 export default function Consultation() {
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    const airtableData = await getData('users');
+    return airtableData;
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      const result = await fetchData();
+      setData(result);
+    };
+    getData();
+  }, []);
+
   const navigate = useNavigate();
-  const datas = [
-    {
-      id: 1,
-      name: '1コウテイペンギン',
-      content:
-        '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
-      children: [
-        {
-          id: 1,
-          birthday: '2020-03-16',
-          gender: 'MALE',
-        },
-        {
-          id: 2,
-          birthday: '2024-01-16',
-          gender: 'MALE',
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: '2コウテイペンギン',
-      content: '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
-      children: [
-        {
-          id: 2,
-          birthday: '2019-03-16',
-          gender: 'FEMALE',
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: '3コウテイペンギン',
-      content: '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
-      children: [
-        {
-          id: 3,
-          birthday: '2015-03-16',
-          gender: 'UNKNOWN',
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: '4コウテイペンギン',
-      content: '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
-      children: [
-        {
-          id: 3,
-          birthday: '2008-03-16',
-          gender: 'UNKNOWN',
-        },
-      ],
-    },
-  ];
 
   const ListItemStyle = {
     py: 2.5,
@@ -106,14 +67,18 @@ export default function Consultation() {
     },
   };
 
-  const ConsultationList = ({ list }) => {
+  const ConsultationList = () => {
     const displayChilden = (children) => {
       return children.map((child, index) => {
         const birthday = new Date(child.birthday);
         const today = new Date();
         const age = today.getFullYear() - birthday.getFullYear();
 
-        return `${age}さい ${GENDER[child.gender]}${children.length - 1 > index ? ' / ' : ''}`;
+        return (
+          <span style={{ fontSize: '10px' }} key={`text-${index}`}>
+            {`${age}さい ${GENDER[child.gender]}${children.length - 1 > index ? ' / ' : ''}`}
+          </span>
+        );
       });
     };
 
@@ -122,41 +87,32 @@ export default function Consultation() {
     };
 
     return (
-      <List sx={{ width: '100%', maxWidth: 850 }}>
-        {list.map((item) => (
-          <>
-            <ListItem key={item.id} sx={ListItemStyle} onClick={handleClickDetail(item.id)}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
-                <ListItemText
-                  primary={item.name}
-                  secondary={
-                    <>
-                      <Typography sx={{ fontSize: '10px' }}>{displayChilden(item.children)}</Typography>
-                    </>
-                  }
-                  secondaryTypographyProps={{
-                    color: '#000',
-                  }}
-                />
-              </div>
-              <Typography
-                sx={{
-                  fontSize: '12px',
-                  width: 'calc(100% - 42px)',
-                  margin: '4px 0 0 auto',
-                  display: '-webkit-box',
-                  '-webkit-box-orient': 'vertical',
-                  '-webkit-line-clamp': '3',
-                  overflow: 'hidden',
+      <Stack sx={{ width: '100%', maxWidth: 850 }}>
+        {data.map((item) => (
+          <Box key={`box-${item.id}`} sx={ListItemStyle} onClick={handleClickDetail(item.id)}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
+              <ListItemText
+                primary={item.fields.name}
+                secondary={displayChilden(JSON.parse(item.fields.children).children)}
+                secondaryTypographyProps={{
+                  color: '#000',
                 }}
-              >
-                {item.content}
-              </Typography>
-            </ListItem>
-          </>
+              />
+            </div>
+            <Typography
+              sx={{
+                fontSize: '12px',
+                width: 'calc(100% - 42px)',
+                margin: '4px 0 0 auto',
+                overflow: 'hidden',
+              }}
+            >
+              {item.fields.content}
+            </Typography>
+          </Box>
         ))}
-      </List>
+      </Stack>
     );
   };
 
@@ -170,7 +126,7 @@ export default function Consultation() {
         <SearchInput />
       </Box>
       <Container maxWidth="sm" sx={{ p: 0, position: 'relative' }}>
-        <ConsultationList list={[].concat(datas, datas)} />
+        <ConsultationList />
         <Button sx={ButtonStyle} variant="contained" onClick={handlePost}>
           相談する
         </Button>

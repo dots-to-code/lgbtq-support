@@ -6,4 +6,25 @@ Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
 # lgbtq-support
+
+To download this project:
+
+```
+git clone git@github.com:dots-to-code/lgbtq-support.git
+
+cd lgbtq-support
+
+npm i
+
+touch .env // add secret keys to your local .env file
+```
+
+see .env.example and replace .env variables with your API keys
+
+To run the project locally:
+
+```
+netlify dev
+```
