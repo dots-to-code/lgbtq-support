@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getData } from '../utils/getData';
+import { postNewUser } from '../utils/postNewUser';
 import { BaseLayout } from '../components/BaseLayout';
 import { Container, Stack, ListItemText, Typography, Button, Box } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
@@ -24,6 +25,25 @@ export default function Consultation() {
       setData(result);
     };
     getData();
+  }, []);
+
+  useEffect(() => {
+    const newUser = {
+      records: [
+        {
+          fields: {
+            name: 'Mickey Mouse',
+            email: 'mickey.mouse@gmail.com',
+          },
+        },
+      ],
+    };
+
+    const postUser = async () => {
+      const result = await postNewUser(newUser);
+      console.log('RESPONSE', result);
+    };
+    postUser();
   }, []);
 
   const navigate = useNavigate();
