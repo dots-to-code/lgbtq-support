@@ -4,17 +4,39 @@ const axios = require('axios');
 
 exports.handler = async (event) => {
   try {
-    // Parse the incoming payload from the event body
     const payload = JSON.parse(event.body);
+    const { email } = payload.records[0].fields;
 
-    // URL for posting data to Airtable
-    const URL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/users`;
+    // URL for checking if user exists
+    const checkURL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/users?filterByFormula={email}='${email}'`;
 
-    // Make a POST request to Airtable API with the payload
-    const response = await axios.post(URL, payload, {
+    // Check if user with the provided email already exists
+    const checkResponse = await axios.get(checkURL, {
       headers: {
         Authorization: `Bearer ${process.env.AIRTABLE_PERSONAL_TOKEN}`,
-        'Content-Type': 'application/json', // Specify content type as JSON
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // If user already exists, return 405 error
+    if (checkResponse.data.records.length > 0) {
+      return {
+        statusCode: 405,
+        body: JSON.stringify({ message: 'User already exists' }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+    }
+
+    // URL for posting data to Airtable to register new user
+    const postURL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/users`;
+
+    // Make a POST request to register new user
+    const response = await axios.post(postURL, payload, {
+      headers: {
+        Authorization: `Bearer ${process.env.AIRTABLE_PERSONAL_TOKEN}`,
+        'Content-Type': 'application/json',
       },
     });
 
