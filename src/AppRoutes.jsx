@@ -13,7 +13,9 @@ import ErrorPage from './routes/ErrorPage';
 import Loading from './components/Loading';
 
 function AppRoutes() {
-  const { isLoading, error, isAuthenticated } = useAuth0();
+  const { isLoading, error, isAuthenticated, user } = useAuth0();
+
+  console.log('USER', user);
 
   if (error) {
     return <ErrorPage />;
@@ -30,7 +32,10 @@ function AppRoutes() {
         <Route path="/consultation" element={isAuthenticated ? <Consultation /> : <Navigate to="/" />} />
         <Route path="/consultation/:id" element={isAuthenticated ? <ConsultationDetail /> : <Navigate to="/" />} />
         <Route path="/consultation/post" element={isAuthenticated ? <ConsultationPost /> : <Navigate to="/" />} />
-        <Route path="/consultation/answer/:id" element={isAuthenticated ? <ConsultationAnswer /> : <Navigate to="/" />} />
+        <Route
+          path="/consultation/answer/:id"
+          element={isAuthenticated ? <ConsultationAnswer /> : <Navigate to="/" />}
+        />
         <Route path="/share" element={isAuthenticated ? <Share /> : <Navigate to="/" />} />
         <Route path="/diagnosis" element={isAuthenticated ? <Diagnosis /> : <Navigate to="/" />} />
         <Route path="/information" element={isAuthenticated ? <Information /> : <Navigate to="/" />} />
