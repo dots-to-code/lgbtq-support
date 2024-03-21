@@ -13,7 +13,6 @@ const postNewUser = (payload) => {
       return response.json();
     })
     .then((result) => {
-      console.log('RRRRR', result);
       return result.records;
     })
     .catch((error) => {

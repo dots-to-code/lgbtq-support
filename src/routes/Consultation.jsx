@@ -72,8 +72,8 @@ export default function Consultation() {
 
   const ButtonStyle = {
     position: 'fixed',
-    bottom: '88px',
-    right: '16px',
+    bottom: '75px',
+    right: '10px',
     height: '54px',
     borderRadius: '16px',
     backgroundColor: '#EB6159',
