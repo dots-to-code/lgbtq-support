@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { useAuth0 } from '@auth0/auth0-react';
 import { getData } from '../utils/getData';
-import { postNewUser } from '../utils/postNewUser';
+import { postData } from '../utils/postData';
 import { BaseLayout } from '../components/BaseLayout';
 import { Container, Stack, ListItemText, Typography, Button, Box } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
@@ -37,7 +37,7 @@ export default function Consultation() {
       (async () => {
         try {
           if (!localStorage.getItem('penfamily-registered')) {
-            await postNewUser(loggedUser).then(() => localStorage.setItem('penfamily-registered', 'true'));
+            await postData(loggedUser, 'postNewUser').then(() => localStorage.setItem('penfamily-registered', 'true'));
           }
           const usersRes = await getData('users');
           setUsers(usersRes);

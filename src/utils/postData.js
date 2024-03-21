@@ -1,5 +1,5 @@
-const postNewUser = (payload) => {
-  return fetch(`/.netlify/functions/postNewUser`, {
+const postData = (payload, funcName) => {
+  return fetch(`/.netlify/functions/${funcName}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,8 +17,8 @@ const postNewUser = (payload) => {
     })
     .catch((error) => {
       console.error('There was a problem with the fetch operation:', error);
-      throw error; // Rethrow the error to handle it further if needed
+      throw error;
     });
 };
 
-export { postNewUser };
+export { postData };
