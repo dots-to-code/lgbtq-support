@@ -36,8 +36,9 @@ export default function Consultation() {
 
       (async () => {
         try {
-          // eslint-disable-next-line no-unused-vars
-          const newUser = await postNewUser(loggedUser);
+          if (!localStorage.getItem('penfamily-registered')) {
+            await postNewUser(loggedUser).then(() => localStorage.setItem('penfamily-registered', 'true'));
+          }
           const usersRes = await getData('users');
           setUsers(usersRes);
           setIsLoading(false);
