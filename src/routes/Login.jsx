@@ -13,7 +13,7 @@ export default function Login() {
       </Box>
       <Typography sx={{ fontSize: '1.3rem' }}>ペンファムへようこそ！</Typography>
       <LoginButton />
-      <img alt="penfam logo" src="/src/assets/PENFAM.png" style={{ maxWidth: '300px', margin: '0 0 0 auto' }} />
+      <img src="assets/PENFAM.png" alt="penfam logo" style={{ maxWidth: '300px', margin: '0 0 0 auto' }} />
     </Stack>
   );
 }
