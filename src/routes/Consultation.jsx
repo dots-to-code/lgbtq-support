@@ -10,11 +10,14 @@ import { GENDER } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '../components/SearchInput';
 import Loading from '../components/Loading';
-import { usersListState } from '../state';
+import { usersListState, consultationsState } from '../state';
 
 export default function Consultation() {
   const { user } = useAuth0();
   const [users, setUsers] = useRecoilState(usersListState);
+  const [consultations, setConsultations] = useRecoilState(consultationsState);
+  const [loading, setIsLoading] = useState(false);
+  const [list, setList] = useState();
 
   if (!users) <Loading />;
 
@@ -38,6 +41,30 @@ export default function Consultation() {
           }
           const usersRes = await getData('users');
           setUsers(usersRes);
+
+          const usersMap = [];
+          usersRes.forEach((user) => {
+            usersMap[user.id] = user;
+          });
+
+          let consultationList = consultations;
+          if (consultations.length === 0) {
+            consultationList = await getData('consultations');
+            setConsultations(consultationList);
+          }
+
+          const list = consultationList.map((consultation) => {
+            const userId = consultation.fields.user_id[0];
+            const user = usersMap[userId];
+            return {
+              ...consultation,
+              user: user,
+            };
+          });
+
+          setList(list);
+          setIsLoading(false);
+
         } catch (error) {
           console.error('An error occurred:', error);
         }
@@ -113,17 +140,19 @@ export default function Consultation() {
 
     return (
       <Stack sx={{ width: '100%', maxWidth: 850 }}>
+        {loading && <Loading size={'50px'} />}
+        {list && list.map((item) => (
         {users.map((item) => (
           <Box key={`box-${item.id}`} sx={ListItemStyle} onClick={handleClickDetail(item.id)}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
               {
                 <ListItemText
-                  primary={item.fields.name}
+                  primary={item.user.fields.name}
                   secondary={
-                    (item.fields.children &&
-                      JSON.parse(item.fields.children).length &&
-                      displayChilden(JSON.parse(item.fields.children))) ||
+                    (item.user.fields.children &&
+                      JSON.parse(item.user.fields.children).length &&
+                      displayChilden(JSON.parse(item.user.fields.children))) ||
                     '-'
                   }
                   secondaryTypographyProps={{
