@@ -16,94 +16,94 @@ export default function ConsultationDetail() {
 
   const { id: consultationId } = useParams();
 
-  // スタブ DBから問い合わせる
-  const data = {
-    id: 1,
-    name: '1コウテイペンギン',
-    content:
-      '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
-    children: [
-      {
-        id: 1,
-        birthday: '2020-03-16',
-        gender: 'MALE',
-      },
-      {
-        id: 2,
-        birthday: '2024-01-16',
-        gender: 'MALE',
-      },
-    ],
-  };
+  // // スタブ DBから問い合わせる
+  // const data = {
+  //   id: 1,
+  //   name: '1コウテイペンギン',
+  //   content:
+  //     '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
+  //   children: [
+  //     {
+  //       id: 1,
+  //       birthday: '2020-03-16',
+  //       gender: 'MALE',
+  //     },
+  //     {
+  //       id: 2,
+  //       birthday: '2024-01-16',
+  //       gender: 'MALE',
+  //     },
+  //   ],
+  // };
 
-  // 回答スタブ DBから問い合わせる
-  const responses = [
-    {
-      id: 2,
-      name: '2コウテイペンギン',
-      content:
-        '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-      children: [
-        {
-          id: 2,
-          birthday: '2019-03-16',
-          gender: 'FEMALE',
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: '3コウテイペンギン',
-      content:
-        '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-      children: [
-        {
-          id: 3,
-          birthday: '2015-03-16',
-          gender: 'UNKNOWN',
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: '4コウテイペンギン',
-      content:
-        '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-      children: [
-        {
-          id: 2,
-          birthday: '2019-03-16',
-          gender: 'FEMALE',
-        },
-      ],
-    },
-    {
-      id: 5,
-      name: '5コウテイペンギン',
-      content:
-        '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-      children: [
-        {
-          id: 3,
-          birthday: '2015-03-16',
-          gender: 'UNKNOWN',
-        },
-      ],
-    },
-    {
-      id: 6,
-      name: '6コウテイペンギン',
-      content:
-        '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-      children: [
-        {
-          id: 3,
-          birthday: '2015-03-16',
-          gender: 'UNKNOWN',
-        },
-      ],
-    },
-  ];
+  // // 回答スタブ DBから問い合わせる
+  // const responses = [
+  //   {
+  //     id: 2,
+  //     name: '2コウテイペンギン',
+  //     content:
+  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
+  //     children: [
+  //       {
+  //         id: 2,
+  //         birthday: '2019-03-16',
+  //         gender: 'FEMALE',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: '3コウテイペンギン',
+  //     content:
+  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
+  //     children: [
+  //       {
+  //         id: 3,
+  //         birthday: '2015-03-16',
+  //         gender: 'UNKNOWN',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 4,
+  //     name: '4コウテイペンギン',
+  //     content:
+  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
+  //     children: [
+  //       {
+  //         id: 2,
+  //         birthday: '2019-03-16',
+  //         gender: 'FEMALE',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 5,
+  //     name: '5コウテイペンギン',
+  //     content:
+  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
+  //     children: [
+  //       {
+  //         id: 3,
+  //         birthday: '2015-03-16',
+  //         gender: 'UNKNOWN',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 6,
+  //     name: '6コウテイペンギン',
+  //     content:
+  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
+  //     children: [
+  //       {
+  //         id: 3,
+  //         birthday: '2015-03-16',
+  //         gender: 'UNKNOWN',
+  //       },
+  //     ],
+  //   },
+  // ];
 
   const ContainerStyle = {
     display: 'flex',
@@ -188,10 +188,9 @@ export default function ConsultationDetail() {
             <SearchInput />
           </Box>
             <Container maxWidth="sm" sx={ContainerStyle}>
-              {/* TODO: ここでうまくユーザー取得ができないのでみなおす */}
-            {/* <SpeechBubble user={consultation.user} isDispFavoButoon="true">
+            <SpeechBubble user={consultation.user} isDispFavoButoon="true">
               <Typography>{consultation.content}</Typography>
-            </SpeechBubble> */}
+            </SpeechBubble>
             <ConsultationResponseList list={responses} />
             <Button sx={ButtonStyle} variant="contained" onClick={handlePost}>
               相談に答える

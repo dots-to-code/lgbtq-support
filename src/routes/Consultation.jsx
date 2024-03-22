@@ -10,12 +10,12 @@ import { GENDER } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '../components/SearchInput';
 import Loading from '../components/Loading';
-import { usersListState, consultationsState } from '../state';
+import { usersListState, consultationState } from '../state';
 
 export default function Consultation() {
   const { user } = useAuth0();
   const [users, setUsers] = useRecoilState(usersListState);
-  const [consultations, setConsultations] = useRecoilState(consultationsState);
+  const [consultations, setConsultations] = useRecoilState(consultationState);
   const [loading, setIsLoading] = useState(false);
   const [list, setList] = useState();
 
@@ -49,11 +49,8 @@ export default function Consultation() {
             usersMap[user.id] = user;
           });
 
-          let consultationList = consultations;
-          if (consultations.length === 0) {
-            consultationList = await getData('consultations');
-            setConsultations(consultationList);
-          }
+          const consultationList = await getData('consultations');
+          setConsultations(consultationList);
 
           const list = consultationList.map((consultation) => {
             const userId = consultation.fields.user_id[0];
