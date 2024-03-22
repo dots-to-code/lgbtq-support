@@ -35,7 +35,6 @@ function AppRoutes() {
           element={isAuthenticated ? <ConsultationAnswer /> : <Navigate to="/" />}
         />
         <Route path="/share" element={isAuthenticated ? <Share /> : <Navigate to="/" />} />
-        <Route path="/diagnosis" element={isAuthenticated ? <Diagnosis /> : <Navigate to="/" />} />
         <Route path="/information" element={isAuthenticated ? <Information /> : <Navigate to="/" />} />
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/" />} />
         <Route path="*" element={isAuthenticated ? <ErrorPage /> : <Navigate to="/" />} />
