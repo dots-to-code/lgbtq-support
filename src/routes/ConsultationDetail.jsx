@@ -5,106 +5,17 @@ import { Container, Box, Typography, Button } from '@mui/material';
 import { SearchInput } from '../components/SearchInput';
 import { SpeechBubble } from '../components/SpeechBubble';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getConsultationById, getUserById } from '../utils/getData';
+import { getConsultationById, getData, getConsultationResponseById } from '../utils/getData';
 import Loading from '../components/Loading';
 import { consultationState, consultationResponseState } from '../state';
 
 export default function ConsultationDetail() {
-  const [loading, setIsLoading] = useState(false);
+  const [loading, setIsLoading] = useState(true);
   const [consultation, setConsultation] = useRecoilState(consultationState);
   const [consultationResponse, setConsultationResponse] = useRecoilState(consultationResponseState);
   const navigate = useNavigate();
 
   const { id: consultationId } = useParams();
-
-  // // スタブ DBから問い合わせる
-  // const data = {
-  //   id: 1,
-  //   name: '1コウテイペンギン',
-  //   content:
-  //     '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
-  //   children: [
-  //     {
-  //       id: 1,
-  //       birthday: '2020-03-16',
-  //       gender: 'MALE',
-  //     },
-  //     {
-  //       id: 2,
-  //       birthday: '2024-01-16',
-  //       gender: 'MALE',
-  //     },
-  //   ],
-  // };
-
-  // // 回答スタブ DBから問い合わせる
-  // const responses = [
-  //   {
-  //     id: 2,
-  //     name: '2コウテイペンギン',
-  //     content:
-  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-  //     children: [
-  //       {
-  //         id: 2,
-  //         birthday: '2019-03-16',
-  //         gender: 'FEMALE',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: '3コウテイペンギン',
-  //     content:
-  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-  //     children: [
-  //       {
-  //         id: 3,
-  //         birthday: '2015-03-16',
-  //         gender: 'UNKNOWN',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 4,
-  //     name: '4コウテイペンギン',
-  //     content:
-  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-  //     children: [
-  //       {
-  //         id: 2,
-  //         birthday: '2019-03-16',
-  //         gender: 'FEMALE',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 5,
-  //     name: '5コウテイペンギン',
-  //     content:
-  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-  //     children: [
-  //       {
-  //         id: 3,
-  //         birthday: '2015-03-16',
-  //         gender: 'UNKNOWN',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 6,
-  //     name: '6コウテイペンギン',
-  //     content:
-  //       '回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります回答内容が入ります',
-  //     children: [
-  //       {
-  //         id: 3,
-  //         birthday: '2015-03-16',
-  //         gender: 'UNKNOWN',
-  //       },
-  //     ],
-  //   },
-  // ];
 
   const ContainerStyle = {
     display: 'flex',
@@ -142,8 +53,8 @@ export default function ConsultationDetail() {
 
   const ConsultationResponseList = ({ list }) => {
     return list.map((item, index) => (
-      <SpeechBubble key={index} user={item}>
-        <Typography>{item.content}</Typography>
+      <SpeechBubble key={index} user={item.user}>
+        <Typography sx={{ fontSize: '12px' }}>{item.fields.content}</Typography>
       </SpeechBubble>
     ));
   };
@@ -152,27 +63,51 @@ export default function ConsultationDetail() {
     navigate(`/consultation/answer/${consultationId}`);
   };
 
-  const fetchData = async () => {
-
-    const result = await getConsultationById(consultationId);
-    const userRes = await getUserById(result.user_id);
-    const user = {
-      ...userRes,
-      children: JSON.parse(userRes.children),
-    };
-    console.log(user);
-    return { ...result, user: user };
-  };
-
   useEffect(() => {
-    const getData = async () => {
+    const getInitData = async () => {
       setIsLoading(true);
       try {
-        const result = await fetchData();
-        setConsultation(result);
+        const [consultationResponse, usersList, consultation] = await Promise.all([
+          // consultationIdを指定して取得したいけど、LinkedIdにどうしてもうまくあてて検索できず暫定で全部取ってます
+          getData("ConsultationResponse"),
+          getData("users"),
+          getConsultationById(consultationId),
+        ]);
 
-        const responseList = await getConsultationById(consultationId);
+        const usersMap = usersList.reduce((map, user) => {
+          map[user.id] = user;
+          return map;
+        }, {});
+
+        const targetUser = usersMap[consultation.user_id];
+        const user = {
+          ...targetUser,
+          children: JSON.parse(targetUser.fields.children),
+        };
+
+        const targetConsultation = {
+          ...consultation,
+          user: user
+        }
+
+        let responseList = consultationResponse
+        .map((item) => {
+          if (item.fields.consultation_id[0] === consultationId) {
+            const user = {
+              ...usersMap[item.fields.user_id[0]],
+              children: JSON.parse(usersMap[item.fields.user_id[0]].fields.children),
+            };
+            return {
+              ...item,
+              user: user
+            }
+          }
+        })
+        .filter((item) => item !== undefined);
+
         setConsultationResponse(responseList);
+        setConsultation(targetConsultation);
+
       } catch (error) {
         console.error('An error occurred:', error);
       } finally {
@@ -180,7 +115,7 @@ export default function ConsultationDetail() {
       }
     };
 
-    getData();
+    getInitData();
   }, []);
 
   return (
@@ -192,10 +127,10 @@ export default function ConsultationDetail() {
           <Box sx={{ m: 4, display: 'flex', justifyContent: 'center' }}>
             <SearchInput />
           </Box>
-            {/* <Container maxWidth="sm" sx={ContainerStyle}>
+            <Container maxWidth="sm" sx={ContainerStyle}>
             <SpeechBubble user={consultation.user} isDispFavoButoon="true">
-              <Typography>{consultation.content}</Typography>
-            </SpeechBubble> */}
+              <Typography sx={{ fontSize: '12px' }}>{consultation.content}</Typography>
+            </SpeechBubble>
             <ConsultationResponseList list={consultationResponse} />
             <Button sx={ButtonStyle} variant="contained" onClick={handlePost}>
               相談に答える

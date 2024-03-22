@@ -39,7 +39,7 @@ export const UserInfo = ({ user }) => {
       <Box sx={RootStyle}>
         <AccountCircleRoundedIcon fontSize={'large'} sx={IconStyle} />
         <Box sx={UserInfoStyle}>
-          <Typography>{user.name}</Typography>
+          <Typography sx={{ fontSize: '15px' }}>{user.fields.name}</Typography>
           <Typography sx={ChildrenStyle}>{displayChilden(user.children)}</Typography>
         </Box>
       </Box>

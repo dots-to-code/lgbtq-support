@@ -5,7 +5,7 @@ import StarsSharpIcon from '@mui/icons-material/StarsSharp';
 
 export const SpeechBubble = ({ children, user, customStyle, isDispFavoButoon = false }) => {
   const PaperStyle = {
-    width: '90%',
+    width: '100%',
     height: 'auto',
     display: 'flex',
     justifyContent: 'flex-start',
@@ -54,10 +54,10 @@ export const SpeechBubble = ({ children, user, customStyle, isDispFavoButoon = f
   };
 
   const FavoriteButton = () => {
-    // TODO レイアウト調整がまだで、現在スマホサイズで表示すると見切れます
     const ButtonStyle = {
-      width: '72px',
+      width: '130px',
       height: '20px',
+      fontSize: '10px',
       borderRadius: '999px',
       backgroundColor: '#EB6159',
       color: '#FFFFFF',
