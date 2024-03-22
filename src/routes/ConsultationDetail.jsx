@@ -7,11 +7,12 @@ import { SpeechBubble } from '../components/SpeechBubble';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getConsultationById, getUserById } from '../utils/getData';
 import Loading from '../components/Loading';
-import { consultationState } from '../state';
+import { consultationState, consultationResponseState } from '../state';
 
 export default function ConsultationDetail() {
   const [loading, setIsLoading] = useState(false);
   const [consultation, setConsultation] = useRecoilState(consultationState);
+  const [consultationResponse, setConsultationResponse] = useRecoilState(consultationResponseState);
   const navigate = useNavigate();
 
   const { id: consultationId } = useParams();
@@ -152,6 +153,7 @@ export default function ConsultationDetail() {
   };
 
   const fetchData = async () => {
+
     const result = await getConsultationById(consultationId);
     const userRes = await getUserById(result.user_id);
     const user = {
@@ -163,19 +165,22 @@ export default function ConsultationDetail() {
   };
 
   useEffect(() => {
-    setIsLoading(true);
     const getData = async () => {
-      const result = await fetchData();
-      setConsultation(result);
+      setIsLoading(true);
+      try {
+        const result = await fetchData();
+        setConsultation(result);
+
+        const responseList = await getConsultationById(consultationId);
+        setConsultationResponse(responseList);
+      } catch (error) {
+        console.error('An error occurred:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    try {
-      getData();
-      console.log(consultation);
-    } catch (error) {
-      console.error('An error occurred:', error);
-    } finally {
-      setIsLoading(false);
-    }
+
+    getData();
   }, []);
 
   return (
@@ -187,11 +192,11 @@ export default function ConsultationDetail() {
           <Box sx={{ m: 4, display: 'flex', justifyContent: 'center' }}>
             <SearchInput />
           </Box>
-            <Container maxWidth="sm" sx={ContainerStyle}>
+            {/* <Container maxWidth="sm" sx={ContainerStyle}>
             <SpeechBubble user={consultation.user} isDispFavoButoon="true">
               <Typography>{consultation.content}</Typography>
-            </SpeechBubble>
-            <ConsultationResponseList list={responses} />
+            </SpeechBubble> */}
+            <ConsultationResponseList list={consultationResponse} />
             <Button sx={ButtonStyle} variant="contained" onClick={handlePost}>
               相談に答える
             </Button>
