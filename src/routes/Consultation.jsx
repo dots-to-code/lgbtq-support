@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { useAuth0 } from '@auth0/auth0-react';
 import { getData } from '../utils/getData';
@@ -22,8 +22,6 @@ export default function Consultation() {
   if (!users) <Loading />;
 
   useEffect(() => {
-    setIsLoading(true);
-
     const registerUserAndGetData = async () => {
       const loggedUser = {
         records: [
@@ -66,8 +64,8 @@ export default function Consultation() {
 
           setList(list);
           setIsLoading(false);
+
         } catch (error) {
-          setIsLoading(false);
           console.error('An error occurred:', error);
         }
       })();
@@ -144,6 +142,7 @@ export default function Consultation() {
       <Stack sx={{ width: '100%', maxWidth: 850 }}>
         {loading && <Loading size={'50px'} />}
         {list && list.map((item) => (
+        {users.map((item) => (
           <Box key={`box-${item.id}`} sx={ListItemStyle} onClick={handleClickDetail(item.id)}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
