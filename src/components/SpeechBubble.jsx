@@ -9,7 +9,6 @@ export const SpeechBubble = ({ children, user, customStyle, isDispFavoButoon = f
     height: 'auto',
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
     flexDirection: 'column',
     marginTop: '30px',
     borderRadius: '40px',

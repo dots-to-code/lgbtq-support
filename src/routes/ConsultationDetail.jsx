@@ -1,9 +1,21 @@
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { BaseLayout } from '../components/BaseLayout';
 import { Container, Box, Typography, Button } from '@mui/material';
 import { SearchInput } from '../components/SearchInput';
 import { SpeechBubble } from '../components/SpeechBubble';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getConsultationById, getUserById } from '../utils/getData';
+import Loading from '../components/Loading';
+import { consultationState } from '../state';
 
 export default function ConsultationDetail() {
+  const [loading, setIsLoading] = useState(false);
+  const [consultation, setConsultation] = useRecoilState(consultationState);
+  const navigate = useNavigate();
+
+  const { id: consultationId } = useParams();
+
   // スタブ DBから問い合わせる
   const data = {
     id: 1,
@@ -136,23 +148,57 @@ export default function ConsultationDetail() {
   };
 
   const handlePost = () => {
-    window.alert('相談回答画面に遷移');
+    navigate(`/consultation/answer/${consultationId}`);
   };
+
+  const fetchData = async () => {
+    const result = await getConsultationById(consultationId);
+    const userRes = await getUserById(result.user_id);
+    const user = {
+      ...userRes,
+      children: JSON.parse(userRes.children),
+    };
+    console.log(user);
+    return { ...result, user: user };
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    const getData = async () => {
+      const result = await fetchData();
+      setConsultation(result);
+    };
+    try {
+      getData();
+      console.log(consultation);
+    } catch (error) {
+      console.error('An error occurred:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   return (
     <BaseLayout>
-      <Box sx={{ m: 4, display: 'flex', justifyContent: 'center' }}>
-        <SearchInput />
-      </Box>
-      <Container maxWidth="sm" sx={ContainerStyle}>
-        <SpeechBubble user={data} isDispFavoButoon="true">
-          <Typography>{data.content}</Typography>
-        </SpeechBubble>
-        <ConsultationResponseList list={responses} />
-        <Button sx={ButtonStyle} variant="contained" onClick={handlePost}>
-          相談に答える
-        </Button>
-      </Container>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <Box sx={{ m: 4, display: 'flex', justifyContent: 'center' }}>
+            <SearchInput />
+          </Box>
+            <Container maxWidth="sm" sx={ContainerStyle}>
+              {/* TODO: ここでうまくユーザー取得ができないのでみなおす */}
+            {/* <SpeechBubble user={consultation.user} isDispFavoButoon="true">
+              <Typography>{consultation.content}</Typography>
+            </SpeechBubble> */}
+            <ConsultationResponseList list={responses} />
+            <Button sx={ButtonStyle} variant="contained" onClick={handlePost}>
+              相談に答える
+            </Button>
+          </Container>
+        </>
+      )}
     </BaseLayout>
   );
 }
