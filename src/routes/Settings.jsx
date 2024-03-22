@@ -9,26 +9,37 @@ import { postData } from '../utils/postData';
 
 export default function Settings() {
   const { user } = useAuth0();
-  const [numberOfChildren, setNumberOfChildren] = useState(0);
+  const [numberOfChildren, setNumberOfChildren] = useState(NaN);
   const [childrenData, setChildrenData] = useState([]);
+  const [aboutText, setAboutText] = useState('');
   const [loading, setLoading] = useState(false);
 
   const LabelStyle = { fontWeight: 600 };
-  const spacing = { marginBottom: '12px' };
+  const spacing = { margin: '12px' };
   const palette = {
     backgroundColor: 'white',
     border: '1px solid #EB6159',
-    borderRadius: '50px',
-    height: '60px',
-    padding: '15px',
-    marginTop: '10px',
-    width: '335px',
+    borderRadius: '10px',
+    height: '40px',
+    padding: '12px',
+    marginTop: '12px',
     display: 'flex',
+    justifyContent: 'center',
+  };
+
+  const boxStyle = {
+    border: '1px solid #EB6159',
+    padding: '12px',
+    borderRadius: '10px',
+    backgroundColor: 'white',
+    width: '335px',
+    marginBottom: '20px',
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     const payload = {
+      content: aboutText,
       email: user.email,
       childrenPayload: childrenData.map((child) => ({
         id: child.id,
@@ -37,8 +48,9 @@ export default function Settings() {
       })),
     };
     await postData(payload, 'postUsersChildren').then((res) => {
+      setNumberOfChildren(NaN);
       setChildrenData([]);
-      setNumberOfChildren(0);
+      setAboutText('');
       setLoading(false);
     });
   };
@@ -58,8 +70,8 @@ export default function Settings() {
     const childrenInputs = [];
     for (let i = 0; i < numberOfChildren; i++) {
       childrenInputs.push(
-        <Box key={i} sx={{ marginTop: '20px' }}>
-          <Typography variant="h6">{i + 1}人目のお子さん</Typography>
+        <Box key={i} sx={{ marginTop: '6px' }}>
+          <Typography>{i + 1}人目のお子さん</Typography>
           <TextField
             InputProps={{
               disableUnderline: true,
@@ -92,17 +104,9 @@ export default function Settings() {
 
   return (
     <BaseLayout>
-      <Stack sx={{ alignItems: 'center' }}>
+      <Stack sx={{ alignItems: 'center', textAlign: 'center', width: '335px', margin: 'auto' }}>
         <h1 style={{ alignSelf: 'center', ...SubTitleStyle }}>Account</h1>
-        <Box
-          sx={{
-            margin: '20px',
-            border: '1px solid #EB6159',
-            padding: '20px',
-            borderRadius: '10px',
-            backgroundColor: 'white',
-          }}
-        >
+        <Box sx={boxStyle}>
           <Typography sx={spacing}>
             <span style={LabelStyle}>名前：</span>
             {user.name}
@@ -118,27 +122,56 @@ export default function Settings() {
           <LogoutButton style={{ alignSelf: 'center' }} />
         </Box>
         <Box>
-          <Typography>お子さんについて教えてください</Typography>
-          <TextField
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-            }}
-            placeholder="子供の数..."
-            type="number"
-            min="0"
-            max="20"
-            style={palette}
-            onWheel={() => document.activeElement.blur()}
-            onChange={(e) => setNumberOfChildren(e.target.value)}
-          />
-          {numberOfChildren > 0 && renderChildInputs()}
-          <Typography>あなたについて教えてください</Typography>
+          <Box sx={boxStyle}>
+            <Typography>お子さんについて教えてください</Typography>
+            <TextField
+              variant="standard"
+              value={numberOfChildren}
+              InputProps={{
+                disableUnderline: true,
+              }}
+              placeholder="子供の数..."
+              type="number"
+              min={0}
+              max={20}
+              style={palette}
+              onWheel={() => document.activeElement.blur()}
+              onChange={(e) => setNumberOfChildren(e.target.value)}
+            />
+            {numberOfChildren > 0 && renderChildInputs()}
+            <Typography>あなたについて教えてください</Typography>
+            <TextField
+              variant="standard"
+              value={aboutText}
+              multiline
+              minRows={4}
+              InputProps={{
+                disableUnderline: true,
+              }}
+              placeholder="自己紹介（200文字以内）..."
+              style={{ ...palette, height: '100px' }}
+              onChange={(e) => setAboutText(e.target.value)}
+            />
+            <Button
+              style={{
+                ...ButtonStyle,
+                marginTop: '12px',
+                '& .MuiInputBase-input': {
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                },
+                '&:hover': {
+                  cursor: 'pointer !important',
+                  backgroundColor: '#EB6159',
+                },
+              }}
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? '読み込み中...' : '送信する'}
+            </Button>
+          </Box>
         </Box>
-
-        <Button sx={ButtonStyle} onClick={handleSubmit} disabled={loading}>
-          {loading ? '読み込み中' : '送信する'}
-        </Button>
       </Stack>
     </BaseLayout>
   );
