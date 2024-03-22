@@ -9,7 +9,7 @@ export const usersListState = atom({
 export const usersSelector = selector({
   key: 'usersSelector',
   get: async ({ get }) => {
-    const users = await getData('users');
+    const users = await getData('getusers');
     return users;
   },
   set: ({ set }, newValue) => {
@@ -21,4 +21,3 @@ export const consultationsState = atom({
   key: 'consultationsState',
   default: [],
 });
-
