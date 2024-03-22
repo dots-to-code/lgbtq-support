@@ -3,7 +3,7 @@ config();
 const axios = require('axios');
 
 exports.handler = async (event) => {
-  const { email, childrenPayload } = JSON.parse(event.body); // Extract email and children payload from the request body
+  const { content, email, childrenPayload } = JSON.parse(event.body); // Extract email and children payload from the request body
 
   const baseURL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/users`;
 
@@ -42,6 +42,7 @@ exports.handler = async (event) => {
       {
         fields: {
           children: JSON.stringify(childrenPayload),
+          content: content,
         },
       },
       {
