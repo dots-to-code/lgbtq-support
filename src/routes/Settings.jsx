@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { useAuth0 } from '@auth0/auth0-react';
 import LogoutButton from '../components/LogoutButton';
 import { BaseLayout } from '../components/BaseLayout';
@@ -6,25 +7,32 @@ import { Box, Button, Typography, Stack, TextField, MenuItem } from '@mui/materi
 import { SubTitleStyle, ButtonStyle } from '../styles';
 import { GENDER } from '../constants';
 import { postData } from '../utils/postData';
+import { usersSelector } from '../state';
 
 export default function Settings() {
   const { user } = useAuth0();
-  const [numberOfChildren, setNumberOfChildren] = useState(NaN);
+  const [numberOfChildren, setNumberOfChildren] = useState('');
   const [childrenData, setChildrenData] = useState([]);
   const [aboutText, setAboutText] = useState('');
+  const users = useRecoilValue(usersSelector);
+  const [myAccountData, setMyAccountData] = useState(users.find((u) => u.fields.email === user.email).fields);
+  console.log(myAccountData);
   const [loading, setLoading] = useState(false);
 
-  const LabelStyle = { fontWeight: 600 };
-  const spacing = { margin: '12px' };
-  const palette = {
-    backgroundColor: 'white',
-    border: '1px solid #EB6159',
-    borderRadius: '10px',
-    height: '40px',
+  const LabelStyle = { fontWeight: 900 };
+  const spacing = { margin: '12px', textAlign: 'left' };
+  const border = {
     padding: '12px',
     marginTop: '12px',
+    backgroundColor: 'white',
+    border: '1px solid #EB6159',
     display: 'flex',
     justifyContent: 'center',
+    borderRadius: '10px',
+  };
+  const palette = {
+    ...border,
+    height: '40px',
   };
 
   const boxStyle = {
@@ -48,9 +56,10 @@ export default function Settings() {
       })),
     };
     await postData(payload, 'postUsersChildren').then((res) => {
-      setNumberOfChildren(NaN);
+      setNumberOfChildren('');
       setChildrenData([]);
       setAboutText('');
+      setMyAccountData(res);
       setLoading(false);
     });
   };
@@ -102,23 +111,44 @@ export default function Settings() {
     return childrenInputs;
   };
 
+  const getAge = (dateOfBirth) => {
+    const birthday = new Date(dateOfBirth);
+    const today = new Date();
+    return today.getFullYear() - birthday.getFullYear();
+  };
+
   return (
     <BaseLayout>
       <Stack sx={{ alignItems: 'center', textAlign: 'center', width: '335px', margin: 'auto' }}>
         <h1 style={{ alignSelf: 'center', ...SubTitleStyle }}>Account</h1>
-        <Box sx={boxStyle}>
+        <Box sx={{ ...boxStyle }}>
           <Typography sx={spacing}>
             <span style={LabelStyle}>名前：</span>
+            <br />
             {user.name}
           </Typography>
           <Typography sx={spacing}>
             <span style={LabelStyle}>メール：</span>
+            <br />
             {user.email}
           </Typography>
-          <Typography sx={spacing}>
-            <span style={LabelStyle}>ニックネーム：</span>
-            {user.nickname}
-          </Typography>
+          {
+            <>
+              <Typography sx={spacing}>
+                <span style={LabelStyle}>子供：</span>
+                <br />
+                {myAccountData.children &&
+                  JSON.parse(myAccountData.children).map(
+                    (child, index) =>
+                      `${getAge(child?.birthday)}さい ${GENDER[child?.gender]}${JSON.parse(myAccountData.children).length - 1 > index ? ' / ' : ''}`,
+                  )}
+              </Typography>
+              <Typography sx={spacing}>
+                <span style={LabelStyle}>自己紹介：</span>
+                {myAccountData.content}
+              </Typography>
+            </>
+          }
           <LogoutButton style={{ alignSelf: 'center' }} />
         </Box>
         <Box>
@@ -143,23 +173,25 @@ export default function Settings() {
             <TextField
               variant="standard"
               value={aboutText}
-              multiline
-              minRows={4}
               InputProps={{
                 disableUnderline: true,
               }}
               placeholder="自己紹介（200文字以内）..."
-              style={{ ...palette, height: '100px' }}
+              style={{
+                ...border,
+                height: '60px',
+                '& .MuiInputBaseInput': {
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                },
+              }}
               onChange={(e) => setAboutText(e.target.value)}
             />
             <Button
               style={{
                 ...ButtonStyle,
                 marginTop: '12px',
-                '& .MuiInputBase-input': {
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                },
+
                 '&:hover': {
                   cursor: 'pointer !important',
                   backgroundColor: '#EB6159',
