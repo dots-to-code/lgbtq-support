@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { useAuth0 } from '@auth0/auth0-react';
 import LogoutButton from '../components/LogoutButton';
 import { BaseLayout } from '../components/BaseLayout';
@@ -6,29 +7,47 @@ import { Box, Button, Typography, Stack, TextField, MenuItem } from '@mui/materi
 import { SubTitleStyle, ButtonStyle } from '../styles';
 import { GENDER } from '../constants';
 import { postData } from '../utils/postData';
+import { usersSelector } from '../state';
 
 export default function Settings() {
   const { user } = useAuth0();
-  const [numberOfChildren, setNumberOfChildren] = useState(0);
+  const [numberOfChildren, setNumberOfChildren] = useState('');
   const [childrenData, setChildrenData] = useState([]);
+  const [aboutText, setAboutText] = useState('');
+  const users = useRecoilValue(usersSelector);
+  const [myAccountData, setMyAccountData] = useState(users.find((u) => u.fields.email === user.email).fields);
+  console.log(myAccountData);
   const [loading, setLoading] = useState(false);
 
-  const LabelStyle = { fontWeight: 600 };
-  const spacing = { marginBottom: '12px' };
-  const palette = {
+  const LabelStyle = { fontWeight: 900 };
+  const spacing = { margin: '12px', textAlign: 'left' };
+  const border = {
+    padding: '12px',
+    marginTop: '12px',
     backgroundColor: 'white',
     border: '1px solid #EB6159',
-    borderRadius: '50px',
-    height: '60px',
-    padding: '15px',
-    marginTop: '10px',
-    width: '335px',
     display: 'flex',
+    justifyContent: 'center',
+    borderRadius: '10px',
+  };
+  const palette = {
+    ...border,
+    height: '40px',
+  };
+
+  const boxStyle = {
+    border: '1px solid #EB6159',
+    padding: '12px',
+    borderRadius: '10px',
+    backgroundColor: 'white',
+    width: '335px',
+    marginBottom: '20px',
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     const payload = {
+      content: aboutText,
       email: user.email,
       childrenPayload: childrenData.map((child) => ({
         id: child.id,
@@ -37,8 +56,10 @@ export default function Settings() {
       })),
     };
     await postData(payload, 'postUsersChildren').then((res) => {
+      setNumberOfChildren('');
       setChildrenData([]);
-      setNumberOfChildren(0);
+      setAboutText('');
+      setMyAccountData(res);
       setLoading(false);
     });
   };
@@ -58,8 +79,8 @@ export default function Settings() {
     const childrenInputs = [];
     for (let i = 0; i < numberOfChildren; i++) {
       childrenInputs.push(
-        <Box key={i} sx={{ marginTop: '20px' }}>
-          <Typography variant="h6">{i + 1}人目のお子さん</Typography>
+        <Box key={i} sx={{ marginTop: '6px' }}>
+          <Typography>{i + 1}人目のお子さん</Typography>
           <TextField
             InputProps={{
               disableUnderline: true,
@@ -90,55 +111,99 @@ export default function Settings() {
     return childrenInputs;
   };
 
+  const getAge = (dateOfBirth) => {
+    const birthday = new Date(dateOfBirth);
+    const today = new Date();
+    return today.getFullYear() - birthday.getFullYear();
+  };
+
   return (
     <BaseLayout>
-      <Stack sx={{ alignItems: 'center' }}>
+      <Stack sx={{ alignItems: 'center', textAlign: 'center', width: '335px', margin: 'auto' }}>
         <h1 style={{ alignSelf: 'center', ...SubTitleStyle }}>Account</h1>
-        <Box
-          sx={{
-            margin: '20px',
-            border: '1px solid #EB6159',
-            padding: '20px',
-            borderRadius: '10px',
-            backgroundColor: 'white',
-          }}
-        >
+        <Box sx={{ ...boxStyle }}>
           <Typography sx={spacing}>
             <span style={LabelStyle}>名前：</span>
+            <br />
             {user.name}
           </Typography>
           <Typography sx={spacing}>
             <span style={LabelStyle}>メール：</span>
+            <br />
             {user.email}
           </Typography>
-          <Typography sx={spacing}>
-            <span style={LabelStyle}>ニックネーム：</span>
-            {user.nickname}
-          </Typography>
+          {
+            <>
+              <Typography sx={spacing}>
+                <span style={LabelStyle}>子供：</span>
+                <br />
+                {myAccountData.children &&
+                  JSON.parse(myAccountData.children).map(
+                    (child, index) =>
+                      `${getAge(child?.birthday)}さい ${GENDER[child?.gender]}${JSON.parse(myAccountData.children).length - 1 > index ? ' / ' : ''}`,
+                  )}
+              </Typography>
+              <Typography sx={spacing}>
+                <span style={LabelStyle}>自己紹介：</span>
+                {myAccountData.content}
+              </Typography>
+            </>
+          }
           <LogoutButton style={{ alignSelf: 'center' }} />
         </Box>
         <Box>
-          <Typography>お子さんについて教えてください</Typography>
-          <TextField
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-            }}
-            placeholder="子供の数..."
-            type="number"
-            min="0"
-            max="20"
-            style={palette}
-            onWheel={() => document.activeElement.blur()}
-            onChange={(e) => setNumberOfChildren(e.target.value)}
-          />
-          {numberOfChildren > 0 && renderChildInputs()}
-          <Typography>あなたについて教えてください</Typography>
-        </Box>
+          <Box sx={boxStyle}>
+            <Typography>お子さんについて教えてください</Typography>
+            <TextField
+              variant="standard"
+              value={numberOfChildren}
+              InputProps={{
+                disableUnderline: true,
+              }}
+              placeholder="子供の数..."
+              type="number"
+              min={0}
+              max={20}
+              style={palette}
+              onWheel={() => document.activeElement.blur()}
+              onChange={(e) => setNumberOfChildren(e.target.value)}
+            />
+            {numberOfChildren > 0 && renderChildInputs()}
+            <Typography>あなたについて教えてください</Typography>
+            <TextField
+              variant="standard"
+              value={aboutText}
+              InputProps={{
+                disableUnderline: true,
+              }}
+              placeholder="自己紹介（200文字以内）..."
+              style={{
+                ...border,
+                height: '60px',
+                '& .MuiInputBaseInput': {
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                },
+              }}
+              onChange={(e) => setAboutText(e.target.value)}
+            />
+            <Button
+              style={{
+                ...ButtonStyle,
+                marginTop: '12px',
 
-        <Button sx={ButtonStyle} onClick={handleSubmit} disabled={loading}>
-          {loading ? '読み込み中' : '送信する'}
-        </Button>
+                '&:hover': {
+                  cursor: 'pointer !important',
+                  backgroundColor: '#EB6159',
+                },
+              }}
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? '読み込み中...' : '送信する'}
+            </Button>
+          </Box>
+        </Box>
       </Stack>
     </BaseLayout>
   );

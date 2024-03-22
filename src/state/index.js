@@ -17,6 +17,11 @@ export const usersSelector = selector({
   },
 });
 
+export const consultationsState = atom({
+  key: 'consultationsState',
+  default: [],
+});
+
 export const consultationState = atom({
   key: 'consultationState',
   default: {},
