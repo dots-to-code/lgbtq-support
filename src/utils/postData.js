@@ -13,7 +13,7 @@ const postData = (payload, funcName) => {
       return response.json();
     })
     .then((result) => {
-      return result.records;
+      return result.fields;
     })
     .catch((error) => {
       console.error('There was a problem with the fetch operation:', error);
