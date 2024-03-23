@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-const patternStyles = [
+export const patternStyles = [
   {
     value: 'cotton',
     imageUrl: '/assets/patterns/cotton.png',

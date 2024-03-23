@@ -16,7 +16,7 @@ export default function ConsultationPost() {
   const users = useRecoilValue(usersSelector);
   const [myAccountData, setMyAccountData] = useState(() => {
     const userData = users.find((u) => u.fields.email === user.email);
-    const children = userData.fields.children ? JSON.parse(userData.fields.children) : "";
+    const children = userData.fields.children ? JSON.parse(userData.fields.children) : '';
     return userData ? { ...userData.fields, id: userData.id, children: children } : null;
   });
   const [loading, setLoading] = useState(false);
@@ -54,8 +54,6 @@ export default function ConsultationPost() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    console.log([myAccountData.id]);
-    console.log(myAccountData);
     const payload = {
       userId: [myAccountData.id],
       content: inputValue,
@@ -73,7 +71,6 @@ export default function ConsultationPost() {
       navigate(`/consultation`);
     }
   }, [openSnackbar, navigate, isInitialRender]);
-
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

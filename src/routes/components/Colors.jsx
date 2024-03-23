@@ -1,13 +1,13 @@
 import { Box } from '@mui/material';
 
-const patternStyles = [
-  {
-    value: 'blue',
-    imageUrl: '/assets/colors/blue.png',
-  },
+export const colorStyles = [
   {
     value: 'pale',
     imageUrl: '/assets/colors/pale.jpg',
+  },
+  {
+    value: 'blue',
+    imageUrl: '/assets/colors/blue.png',
   },
   {
     value: 'bright',
@@ -43,8 +43,8 @@ const ColorPalette = ({ selectedColors, setSelectedColors }) => {
           margin: '12px',
         }}
       >
-        {patternStyles.length &&
-          patternStyles.map((color, index) => (
+        {colorStyles.length &&
+          colorStyles.map((color, index) => (
             <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Box
                 sx={{
