@@ -7,11 +7,11 @@ import { SpeechBubble } from '../components/SpeechBubble';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getConsultationById, getData, getConsultationResponseById } from '../utils/getData';
 import Loading from '../components/Loading';
-import { consultationState, consultationResponseState } from '../state';
+import { consultationsState, consultationResponseState } from '../state';
 
 export default function ConsultationDetail() {
   const [loading, setIsLoading] = useState(true);
-  const [consultation, setConsultation] = useRecoilState(consultationState);
+  const [consultation, setConsultation] = useRecoilState(consultationsState);
   const [consultationResponse, setConsultationResponse] = useRecoilState(consultationResponseState);
   const navigate = useNavigate();
 
@@ -69,8 +69,8 @@ export default function ConsultationDetail() {
       try {
         const [consultationResponse, usersList, consultation] = await Promise.all([
           // consultationIdを指定して取得したいけど、LinkedIdにどうしてもうまくあてて検索できず暫定で全部取ってます
-          getData("ConsultationResponse"),
-          getData("users"),
+          getData("getConsultationResponse"),
+          getData("getusers"),
           getConsultationById(consultationId),
         ]);
 
