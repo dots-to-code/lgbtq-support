@@ -1,20 +1,23 @@
-import { useState, useEffect } from 'react';
-import { TextField, Button, Box, Typography, Stack, MenuItem } from '@mui/material';
+import { useState } from 'react';
+import { TextField, Button, Box, Typography, Stack } from '@mui/material';
 import { postData } from '../utils/postData';
+import { useNavigate } from 'react-router-dom';
 import { BaseLayout } from '../components/BaseLayout';
-import { SubTitleStyle, ButtonStyle } from '../styles';
-import ColorPalette from './Colors';
-import ClothesStyles from './ClothesStyles';
-import { GENDER } from '../constants';
-import { clothingStyles } from './ClothesStyles';
+import { ButtonStyle } from '../styles';
+import Loading from '../components/Loading';
+import ColorPalette, { colorStyles } from './components/Colors';
+import ClothesStyles, { clothingStyles } from './components/ClothesStyles';
+import PatternStyles, { patternStyles } from './components/PatternStyles';
 
 export default function Diagnosis() {
   const [age, setAge] = useState('');
   const [name, setName] = useState('');
-  const [gender, setGender] = useState('');
   const [frame, setFrame] = useState(0);
   const [selectedColors, setSelectedColors] = useState('');
   const [selectedStyle, setSelectedStyle] = useState('');
+  const [selectedPattern, setSelectedPattern] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // DALLe images analysis
   const [aiImages, setAiImages] = useState([]);
@@ -33,31 +36,40 @@ export default function Diagnosis() {
     height: '40px',
   };
 
-  const handleNext = () => frame < 2 && setFrame(frame + 1);
-
-  useEffect(() => {
-    if (selectedStyle) {
-      const fetchDefaultImages = async () => {
-        try {
-          const payload = `Generate  ${selectedStyle} style outfits 
-          for a ${age} years old ${gender} child 
-          in these color shades ${selectedColors}`;
-          const result = await postData(payload, 'getImagesAI');
-          setAiImages(result);
-        } catch (error) {
-          console.error('Error fetching default images:', error);
-        }
-      };
-
-      fetchDefaultImages();
+  const handleNext = () => {
+    frame < 4 && setFrame(frame + 1);
+    if (frame === 4) {
+      handleSubmit();
     }
-  }, [age, gender, selectedStyle]);
+  };
+
+  const handleEnd = () => navigate('/');
+
+  const handleSubmit = async () => {
+    if (age && selectedColors && selectedStyle && selectedPattern) {
+      const prompt = `I need ${selectedStyle} style outfits of a ${age} years old child in ${selectedColors} colors`;
+      try {
+        setLoading(true);
+        const result = await postData({ prompt }, 'getImagesAI');
+        setAiImages(result.images);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching default images:', error);
+        setAiImages([
+          { id: 'mock1', url: '/assets/mocks/mock1.png' },
+          { id: 'mock2', url: '/assets/mocks/mock2.png' },
+          { id: 'mock3', url: '/assets/mocks/mock3.png' },
+        ]);
+        setLoading(false);
+      }
+    }
+  };
 
   return (
     <BaseLayout>
       <Stack sx={{ alignItems: 'center', textAlign: 'center', width: '335px', margin: 'auto' }}>
-        <h1 style={{ alignSelf: 'center', ...SubTitleStyle }}>{name ? `${name}さんの好きな服` : '好きな服診断'}</h1>
-        <Stack sx={{ height: '60vh' }}>
+        <h1 style={{ alignSelf: 'center' }}>好きな服診断</h1>
+        <Stack>
           {frame === 0 && (
             <>
               <TextField
@@ -86,22 +98,6 @@ export default function Diagnosis() {
                 onWheel={() => document.activeElement.blur()}
                 onChange={(e) => setName(e.target.value)}
               />
-              <TextField
-                select
-                fullWidth
-                placeholder="性別"
-                variant="standard"
-                value={gender}
-                style={palette}
-                InputProps={{
-                  disableUnderline: true,
-                }}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <MenuItem value="MALE">{GENDER['MALE']}</MenuItem>
-                <MenuItem value="FEMALE">{GENDER['FEMALE']}</MenuItem>
-                <MenuItem value="UNKNOWN">{GENDER['UNKNOWN']}</MenuItem>
-              </TextField>
             </>
           )}
           {frame === 1 && (
@@ -114,69 +110,114 @@ export default function Diagnosis() {
             <>
               <Typography>好きなものを選んでね</Typography>
               <ClothesStyles selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} />
-              {aiImages.length && (
-                <div>
-                  <h2>AIがおすすめする服</h2>
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(2, 1fr)',
-                      gap: '12px',
-                      justifyContent: 'center',
-                      margin: '12px',
-                    }}
-                  >
-                    {aiImages.map((imageUrl, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          padding: '12px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-                          backgroundColor: 'white',
-                          borderRadius: '8px',
-                          border:
-                            selectedStyle === clothingStyles[index].name
-                              ? '2px solid #EB6159'
-                              : '2px solid transparent',
-                          transition: 'transform 0.3s ease-in-out',
-                          '&:hover': {
-                            transform: 'translateY(-3px)',
-                          },
-                        }}
-                        onClick={() => setSelectedStyle(clothingStyles[index].name)}
-                      >
-                        <h3>{clothingStyles[index].name}</h3>
-                        <img
-                          src={imageUrl}
-                          alt={clothingStyles[index].name}
-                          style={{ width: '200px', height: '200px' }}
-                        />
-                      </Box>
-                    ))}
-                  </div>
-                </div>
-              )}
             </>
           )}
+          {frame === 3 && (
+            <>
+              <Typography>好きなものを選んでね</Typography>
+              <PatternStyles selectedPattern={selectedPattern} setSelectedPattern={setSelectedPattern} />
+            </>
+          )}
+          {frame === 4 && (
+            <>
+              <div style={{ display: 'flex' }}>
+                <div
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    margin: '0 auto',
+                    backgroundImage: `url(${colorStyles.find((color) => color.value === selectedColors)?.imageUrl})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    border: '1px solid #000',
+                    borderRadius: '8px',
+                  }}
+                ></div>
+                <div
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    margin: '0 auto',
+                    backgroundImage: `url(${clothingStyles.find((style) => style.value === selectedStyle)?.imageUrl})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    border: '1px solid #000',
+                    borderRadius: '8px',
+                  }}
+                ></div>
+                <div
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    margin: '0 auto',
+                    backgroundImage: `url(${patternStyles.find((pattern) => pattern.value === selectedPattern)?.imageUrl})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    border: '1px solid #000',
+                    borderRadius: '8px',
+                  }}
+                ></div>
+              </div>
+            </>
+          )}
+          <Button
+            style={{
+              ...ButtonStyle,
+              marginTop: '12px',
+              '&:hover': {
+                cursor: 'pointer !important',
+                backgroundColor: '#EB6159',
+              },
+            }}
+            disabled={
+              (frame === 0) & (!age || !name) ||
+              (frame === 1 && !selectedColors.length) ||
+              (frame === 2 && !selectedStyle) ||
+              (frame === 3 && !selectedPattern)
+            }
+            onClick={handleNext}
+          >
+            {frame === 4 ? '送信する' : 'つぎへ'}
+          </Button>
+          {loading ? (
+            <Loading size={'50px'} />
+          ) : aiImages.length ? (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              {aiImages.map((image, i) => (
+                <img
+                  key={i}
+                  src={image.url || ''}
+                  style={{
+                    marginTop: '20px',
+                    height: 'auto',
+                    width: '150px',
+                    borderRadius: '8px',
+                  }}
+                  alt={image.id}
+                />
+              ))}
+              <Button
+                style={{
+                  ...ButtonStyle,
+                  marginTop: '12px',
+                  '&:hover': {
+                    cursor: 'pointer !important',
+                    backgroundColor: '#EB6159',
+                  },
+                }}
+                onClick={handleEnd}
+              >
+                診断をおわる
+              </Button>
+            </div>
+          ) : null}
         </Stack>
-        <Button
-          style={{
-            ...ButtonStyle,
-            marginTop: '12px',
-            '&:hover': {
-              cursor: 'pointer !important',
-              backgroundColor: '#EB6159',
-            },
-            position: 'fixed',
-            bottom: '90px',
-          }}
-          disabled={(frame === 0) & (!age || !name) || (frame === 1 && !selectedColors.length)}
-          onClick={handleNext}
-        >
-          つぎへ
-        </Button>
       </Stack>
     </BaseLayout>
   );
