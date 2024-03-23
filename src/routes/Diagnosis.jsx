@@ -37,7 +37,7 @@ export default function Diagnosis() {
   };
 
   const handleNext = () => {
-    frame < 4 && setFrame(frame + 1);
+    frame < 5 && setFrame(frame + 1);
     if (frame === 4) {
       handleSubmit();
     }
@@ -160,63 +160,69 @@ export default function Diagnosis() {
               </div>
             </>
           )}
-          <Button
-            style={{
-              ...ButtonStyle,
-              marginTop: '12px',
-              '&:hover': {
-                cursor: 'pointer !important',
-                backgroundColor: '#EB6159',
-              },
-            }}
-            disabled={
-              (frame === 0) & (!age || !name) ||
-              (frame === 1 && !selectedColors.length) ||
-              (frame === 2 && !selectedStyle) ||
-              (frame === 3 && !selectedPattern)
-            }
-            onClick={handleNext}
-          >
-            {frame === 4 ? '送信する' : 'つぎへ'}
-          </Button>
-          {loading ? (
-            <Loading size={'50px'} />
-          ) : aiImages.length ? (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              {aiImages.map((image, i) => (
-                <img
-                  key={i}
-                  src={image.url || ''}
+          {frame === 5 && (
+            <>
+              {loading ? (
+                <Loading size={'50px'} />
+              ) : aiImages.length ? (
+                <div
                   style={{
-                    marginTop: '20px',
-                    height: 'auto',
-                    width: '150px',
-                    borderRadius: '8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
                   }}
-                  alt={image.id}
-                />
-              ))}
-              <Button
-                style={{
-                  ...ButtonStyle,
-                  marginTop: '12px',
-                  '&:hover': {
-                    cursor: 'pointer !important',
-                    backgroundColor: '#EB6159',
-                  },
-                }}
-                onClick={handleEnd}
-              >
-                診断をおわる
-              </Button>
-            </div>
-          ) : null}
+                >
+                  {aiImages.map((image, i) => (
+                    <img
+                      key={i}
+                      src={image.url || ''}
+                      style={{
+                        marginTop: '20px',
+                        height: 'auto',
+                        width: '150px',
+                        borderRadius: '8px',
+                      }}
+                      alt={image.id}
+                    />
+                  ))}
+                  <Button
+                    style={{
+                      ...ButtonStyle,
+                      marginTop: '12px',
+                      '&:hover': {
+                        cursor: 'pointer !important',
+                        backgroundColor: '#EB6159',
+                      },
+                    }}
+                    onClick={handleEnd}
+                  >
+                    診断をおわる
+                  </Button>
+                </div>
+              ) : null}
+            </>
+          )}
+          {frame !== 5 && (
+            <Button
+              style={{
+                ...ButtonStyle,
+                marginTop: '12px',
+                '&:hover': {
+                  cursor: 'pointer !important',
+                  backgroundColor: '#EB6159',
+                },
+              }}
+              disabled={
+                (frame === 0) & (!age || !name) ||
+                (frame === 1 && !selectedColors.length) ||
+                (frame === 2 && !selectedStyle) ||
+                (frame === 3 && !selectedPattern)
+              }
+              onClick={handleNext}
+            >
+              {frame === 4 ? '送信する' : 'つぎへ'}
+            </Button>
+          )}
         </Stack>
       </Stack>
     </BaseLayout>
