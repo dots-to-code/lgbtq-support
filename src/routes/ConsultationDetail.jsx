@@ -69,8 +69,8 @@ export default function ConsultationDetail() {
       try {
         const [consultationResponse, usersList, consultation] = await Promise.all([
           // consultationIdを指定して取得したいけど、LinkedIdにどうしてもうまくあてて検索できず暫定で全部取ってます
-          getData("getConsultationResponse"),
-          getData("getusers"),
+          getData('getConsultationResponse'),
+          getData('getusers'),
           getConsultationById(consultationId),
         ]);
 
@@ -82,32 +82,34 @@ export default function ConsultationDetail() {
         const targetUser = usersMap[consultation.user_id];
         const user = {
           ...targetUser,
+          name: targetUser.fields.name,
           children: JSON.parse(targetUser.fields.children),
         };
-
         const targetConsultation = {
           ...consultation,
-          user: user
-        }
+          user: user,
+        };
 
         let responseList = consultationResponse
-        .map((item) => {
-          if (item.fields.consultation_id[0] === consultationId) {
-            const user = {
-              ...usersMap[item.fields.user_id[0]],
-              children: JSON.parse(usersMap[item.fields.user_id[0]].fields.children),
-            };
-            return {
-              ...item,
-              user: user
+          .map((item) => {
+            if (item.fields.consultation_id[0] === consultationId) {
+              const user = {
+                id: usersMap[item.fields.user_id[0]].id,
+                name: usersMap[item.fields.user_id[0]].fields.name,
+                // TODO: エラーになるので一旦コメントアウト
+                // children: JSON.parse(usersMap[item.fields.user_id[0]].fields.children),
+              };
+              return {
+                ...item,
+                user: user,
+              };
             }
-          }
-        })
-        .filter((item) => item !== undefined);
+          })
+          .filter((item) => item !== undefined);
 
+        responseList.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
         setConsultationResponse(responseList);
         setConsultation(targetConsultation);
-
       } catch (error) {
         console.error('An error occurred:', error);
       } finally {
@@ -116,6 +118,7 @@ export default function ConsultationDetail() {
     };
 
     getInitData();
+    console.log('consultation:', consultation);
   }, []);
 
   return (
@@ -127,7 +130,7 @@ export default function ConsultationDetail() {
           <Box sx={{ m: 4, display: 'flex', justifyContent: 'center' }}>
             <SearchInput />
           </Box>
-            <Container maxWidth="sm" sx={ContainerStyle}>
+          <Container maxWidth="sm" sx={ContainerStyle}>
             <SpeechBubble user={consultation.user} isDispFavoButoon="true">
               <Typography sx={{ fontSize: '12px' }}>{consultation.content}</Typography>
             </SpeechBubble>

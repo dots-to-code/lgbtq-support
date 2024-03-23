@@ -16,7 +16,6 @@ export default function Settings() {
   const [aboutText, setAboutText] = useState('');
   const users = useRecoilValue(usersSelector);
   const [myAccountData, setMyAccountData] = useState(users.find((u) => u.fields.email === user.email).fields);
-  console.log(myAccountData);
   const [loading, setLoading] = useState(false);
 
   const LabelStyle = { fontWeight: 900 };

@@ -50,6 +50,7 @@ export default function Consultation() {
           });
 
           const consultationList = await getData('getconsultations');
+          consultationList.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
           setConsultations(consultationList);
 
           const list = consultationList.map((consultation) => {
@@ -140,37 +141,38 @@ export default function Consultation() {
     return (
       <Stack sx={{ width: '100%', maxWidth: 850 }}>
         {loading && <Loading size={'50px'} />}
-        {list && list.map((item) => (
-          <Box key={`box-${item.id}`} sx={ListItemStyle} onClick={handleClickDetail(item)}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
-              {
-                <ListItemText
-                  primary={item.user.fields.name}
-                  secondary={
-                    (item.user.fields.children &&
-                      JSON.parse(item.user.fields.children).length &&
-                      displayChilden(JSON.parse(item.user.fields.children))) ||
-                    '-'
-                  }
-                  secondaryTypographyProps={{
-                    color: '#000',
-                  }}
-                />
-              }
-            </div>
-            <Typography
-              sx={{
-                fontSize: '12px',
-                width: 'calc(100% - 42px)',
-                margin: '4px 0 0 auto',
-                overflow: 'hidden',
-              }}
-            >
-              {item.fields.content || '-'}
-            </Typography>
-          </Box>
-        ))}
+        {list &&
+          list.map((item) => (
+            <Box key={`box-${item.id}`} sx={ListItemStyle} onClick={handleClickDetail(item)}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
+                {
+                  <ListItemText
+                    primary={item.user.fields.name}
+                    secondary={
+                      (item.user.fields.children &&
+                        JSON.parse(item.user.fields.children).length &&
+                        displayChilden(JSON.parse(item.user.fields.children))) ||
+                      '-'
+                    }
+                    secondaryTypographyProps={{
+                      color: '#000',
+                    }}
+                  />
+                }
+              </div>
+              <Typography
+                sx={{
+                  fontSize: '12px',
+                  width: 'calc(100% - 42px)',
+                  margin: '4px 0 0 auto',
+                  overflow: 'hidden',
+                }}
+              >
+                {item.fields.content || '-'}
+              </Typography>
+            </Box>
+          ))}
       </Stack>
     );
   };
