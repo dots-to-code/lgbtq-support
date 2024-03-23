@@ -26,3 +26,8 @@ export const consultationState = atom({
   key: 'consultationState',
   default: null,
 });
+
+export const consultationResponseState = atom({
+  key: 'consultationResponseState',
+  default: {},
+});

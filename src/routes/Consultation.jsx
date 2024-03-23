@@ -49,11 +49,8 @@ export default function Consultation() {
             usersMap[user.id] = user;
           });
 
-          let consultationList = consultations;
-          if (consultations.length === 0) {
-            consultationList = await getData('getconsultations');
-            setConsultations(consultationList);
-          }
+          const consultationList = await getData('getconsultations');
+          setConsultations(consultationList);
 
           const list = consultationList.map((consultation) => {
             const userId = consultation.fields.user_id[0];
@@ -137,43 +134,44 @@ export default function Consultation() {
     };
 
     const handleClickDetail = (item) => () => {
-      navigate(`/consultation/${item.id}`, { state: { selectedConsultation: item } });
+      navigate(`/consultation/${item.id}`);
     };
 
     return (
       <Stack sx={{ width: '100%', maxWidth: 850 }}>
         {loading && <Loading size={'50px'} />}
-        {list && list.map((item) => (
-          <Box key={`box-${item.id}`} sx={ListItemStyle} onClick={handleClickDetail(item)}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
-              {
-                <ListItemText
-                  primary={item.user.fields.name}
-                  secondary={
-                    (item.user.fields.children &&
-                      JSON.parse(item.user.fields.children).length &&
-                      displayChilden(JSON.parse(item.user.fields.children))) ||
-                    '-'
-                  }
-                  secondaryTypographyProps={{
-                    color: '#000',
-                  }}
-                />
-              }
-            </div>
-            <Typography
-              sx={{
-                fontSize: '12px',
-                width: 'calc(100% - 42px)',
-                margin: '4px 0 0 auto',
-                overflow: 'hidden',
-              }}
-            >
-              {item.fields.content || '-'}
-            </Typography>
-          </Box>
-        ))}
+        {list &&
+          list.map((item) => (
+            <Box key={`box-${item.id}`} sx={ListItemStyle} onClick={handleClickDetail(item)}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
+                {
+                  <ListItemText
+                    primary={item.user.fields.name}
+                    secondary={
+                      (item.user.fields.children &&
+                        JSON.parse(item.user.fields.children).length &&
+                        displayChilden(JSON.parse(item.user.fields.children))) ||
+                      '-'
+                    }
+                    secondaryTypographyProps={{
+                      color: '#000',
+                    }}
+                  />
+                }
+              </div>
+              <Typography
+                sx={{
+                  fontSize: '12px',
+                  width: 'calc(100% - 42px)',
+                  margin: '4px 0 0 auto',
+                  overflow: 'hidden',
+                }}
+              >
+                {item.fields.content || '-'}
+              </Typography>
+            </Box>
+          ))}
       </Stack>
     );
   };

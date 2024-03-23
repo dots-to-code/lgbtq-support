@@ -31,6 +31,7 @@ export default function ConsultationAnswer() {
       user_id: [result.id],
       children: JSON.parse(consultationUserRes.children),
     };
+    console.log(myAccountData);
     return { ...result, user: consultationUser };
   };
 
