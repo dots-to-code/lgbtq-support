@@ -2,7 +2,7 @@ import { GENDER } from '../constants';
 import { Box, Typography } from '@mui/material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 
-export const UserInfo = ({ user }) => {
+export const UserInfo = ({ user, hiddenChildren = false }) => {
   const IconStyle = {
     color: '#393532',
     mr: 1,
@@ -40,7 +40,7 @@ export const UserInfo = ({ user }) => {
         <AccountCircleRoundedIcon fontSize={'large'} sx={IconStyle} />
         <Box sx={UserInfoStyle}>
           <Typography>{user.name}</Typography>
-          <Typography sx={ChildrenStyle}>{displayChilden(user.children)}</Typography>
+          {!hiddenChildren && <Typography sx={ChildrenStyle}>{displayChilden(user.children)}</Typography>}
         </Box>
       </Box>
     </>

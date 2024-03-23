@@ -158,7 +158,6 @@ export default function ConsultationDetail() {
       ...userRes,
       children: JSON.parse(userRes.children),
     };
-    console.log(user);
     return { ...result, user: user };
   };
 
@@ -170,7 +169,6 @@ export default function ConsultationDetail() {
     };
     try {
       getData();
-      console.log(consultation);
     } catch (error) {
       console.error('An error occurred:', error);
     } finally {
@@ -187,8 +185,8 @@ export default function ConsultationDetail() {
           <Box sx={{ m: 4, display: 'flex', justifyContent: 'center' }}>
             <SearchInput />
           </Box>
-            <Container maxWidth="sm" sx={ContainerStyle}>
-              {/* TODO: ここでうまくユーザー取得ができないのでみなおす */}
+          <Container maxWidth="sm" sx={ContainerStyle}>
+            {/* TODO: ここでうまくユーザー取得ができないのでみなおす */}
             {/* <SpeechBubble user={consultation.user} isDispFavoButoon="true">
               <Typography>{consultation.content}</Typography>
             </SpeechBubble> */}

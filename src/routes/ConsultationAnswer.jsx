@@ -1,13 +1,38 @@
 import { useRef, useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { BaseLayout } from '../components/BaseLayout';
 import { SpeechBubble } from '../components/SpeechBubble';
 import { UserInfo } from '../components/UserInfo';
 import { Container, Typography, Box, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import Loading from '../components/Loading';
+import { getConsultationById, getUserById } from '../utils/getData';
+import { useParams } from 'react-router-dom';
+import { consultationState, usersSelector } from '../state';
+import { postData } from '../utils/postData';
 
 export default function ConsultationAnswer() {
+  const { user } = useAuth0();
+  const { id: consultationId } = useParams();
   const [inputValue, setInputValue] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [consultation, setConsultation] = useRecoilState(consultationState);
+  const users = useRecoilValue(usersSelector);
+  const [myAccountData, setMyAccountData] = useState(users.find((u) => u.fields.email === user.email).fields);
+
   const textAreaRef = useRef(null);
+
+  const fetchData = async () => {
+    const result = await getConsultationById(consultationId);
+    const consultationUserRes = await getUserById(result.user_id);
+    const consultationUser = {
+      ...consultationUserRes,
+      user_id: [result.id],
+      children: JSON.parse(consultationUserRes.children),
+    };
+    return { ...result, user: consultationUser };
+  };
 
   useEffect(() => {
     const adjustTextAreaHeight = () => {
@@ -41,6 +66,23 @@ export default function ConsultationAnswer() {
     };
   }, []);
 
+  useEffect(() => {
+    setLoading(true);
+    const getData = async () => {
+      const result = await fetchData();
+      setConsultation(result);
+    };
+    (async () => {
+      try {
+        getData();
+      } catch (error) {
+        console.error('An error occurred:', error);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
   const BoxStyle = {
     maxWidth: '600px',
     display: 'flex',
@@ -68,68 +110,65 @@ export default function ConsultationAnswer() {
     },
   };
 
-  const handleClickSendButton = () => {
-    // DBに値を登録する
-    window.alert('回答送信');
-  };
-
-  // スタブ DBから問い合わせる
-  const data = {
-    id: 1,
-    name: '1コウテイペンギン',
-    content:
-      '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
-    children: [
+  const handleClickSendButton = async () => {
+    setLoading(true);
+    const records = [
       {
-        id: 1,
-        birthday: '2020-03-16',
-        gender: 'MALE',
+        fields: {
+          consultation_id: [consultationId],
+          user_id: [consultation.user_id[0]],
+          content: inputValue,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
       },
-      {
-        id: 2,
-        birthday: '2024-01-16',
-        gender: 'MALE',
-      },
-    ],
-  };
-
-  // スタブ ログインユーザー情報 DBから問い合わせる
-  const loginUser = {
-    id: 2,
-    name: '2ジェンツーペンギン',
-    children: [
-      {
-        id: 1,
-        birthday: '2020-03-16',
-        gender: 'MALE',
-      },
-    ],
+    ];
+    try {
+      await postData({ records }, 'postConsultationAnswer');
+      const result = await fetchData();
+      setConsultation(result);
+    } catch (error) {
+      console.error('An error occurred:', error);
+    } finally {
+      setLoading(false);
+      setInputValue('');
+    }
   };
 
   return (
     <BaseLayout>
-      <Container maxWidth="sm">
-        <SpeechBubble user={data}>
-          <Typography>{data.content}</Typography>
-        </SpeechBubble>
-      </Container>
-      <Box sx={BoxStyle}>
-        <UserInfo user={loginUser} />
-        <Box display="flex" alignItems="center" sx={{ m: 1 }}>
-          <TextField
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            inputRef={textAreaRef}
-            placeholder=""
-            multiline
-            minRows={1}
-            maxRows={10}
-            variant="outlined"
-            sx={TextFieldStyle}
-          />
-          <SendIcon fontSize="large" sx={IconStyle} onClick={handleClickSendButton} />
-        </Box>
-      </Box>
+      {loading || !consultation ? (
+        <Loading />
+      ) : (
+        <>
+          <Container maxWidth="sm">
+            <SpeechBubble user={consultation.user}>
+              <Typography>{consultation.content}</Typography>
+            </SpeechBubble>
+          </Container>
+          <Box sx={BoxStyle}>
+            <UserInfo user={myAccountData} hiddenChildren={true} />
+            <Box display="flex" alignItems="center" sx={{ m: 1 }}>
+              <TextField
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                inputRef={textAreaRef}
+                placeholder=""
+                multiline
+                minRows={1}
+                maxRows={10}
+                variant="outlined"
+                sx={TextFieldStyle}
+              />
+              {inputValue ? (
+                <SendIcon fontSize="large" sx={IconStyle} onClick={handleClickSendButton} />
+              ) : (
+                <SendIcon fontSize="large" sx={{ ...IconStyle, opacity: 0.5, cursor: 'not-allowed' }} />
+              )}
+            </Box>
+          </Box>
+        </>
+      )}
     </BaseLayout>
   );
 }
