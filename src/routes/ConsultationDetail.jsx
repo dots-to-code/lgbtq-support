@@ -83,7 +83,7 @@ export default function ConsultationDetail() {
         const user = {
           ...targetUser,
           name: targetUser.fields.name,
-          children: JSON.parse(targetUser.fields.children),
+          children: targetUser.fields.children ? JSON.parse(targetUser.fields.children) : "",
         };
         const targetConsultation = {
           ...consultation,
