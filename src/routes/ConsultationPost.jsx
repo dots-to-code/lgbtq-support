@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useAuth0 } from '@auth0/auth0-react';
 import { BaseLayout } from '../components/BaseLayout';
 import { OvalButton } from '../components/OvalButton';
+import { Container, TextField, Snackbar, IconButton, Backdrop } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { SpeechBubble } from '../components/SpeechBubble';
-import { Container, TextField } from '@mui/material';
 import { usersSelector } from '../state';
+import { postData } from '../utils/postData';
+import { useNavigate } from 'react-router-dom';
 
 export default function ConsultationPost() {
   const { user } = useAuth0();
@@ -14,12 +17,17 @@ export default function ConsultationPost() {
   const [myAccountData, setMyAccountData] = useState(() => {
     const userData = users.find((u) => u.fields.email === user.email);
     const children = userData.fields.children ? JSON.parse(userData.fields.children) : "";
-    return userData ? { ...userData.fields, children: children } : null;
+    return userData ? { ...userData, children: children } : null;
   });
-
-  console.log(myAccountData);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(true);
 
   const ContainerStyle = {
+
+
+    
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -43,9 +51,42 @@ export default function ConsultationPost() {
     if (!inputValue.trim()) {
       return;
     }
-    // ここにDBへの登録処理を記述
-    window.alert('相談登録処理');
+    handleSubmit();
   };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    const payload = {
+      userId: [myAccountData.id],
+      content: inputValue,
+    };
+    await postData(payload, 'postConsultations').then((res) => {
+      setLoading(false);
+      setOpen(true);
+      setOpenSnackbar(true);
+    });
+  };
+
+  useEffect(() => {
+    if (!openSnackbar) {
+      navigate(`/consultation`);
+    }
+  }, [openSnackbar, navigate]);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  const action = (
+    <>
+      <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   return (
     <BaseLayout>
@@ -65,6 +106,33 @@ export default function ConsultationPost() {
           相談を投稿する
         </OvalButton>
       </Container>
+      <Snackbar
+        open={open}
+        autoHideDuration={20000}
+        onClose={handleClose}
+        message="登録が完了しました！"
+        action={action}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: 'white',
+            color: 'black',
+            width: '80%',
+            maxWidth: '400px',
+          },
+        }}
+        ContentProps={{
+          sx: {
+            fontSize: '1.2rem',
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={openSnackbar}
+        onClick={handleClose}
+      />
     </BaseLayout>
   );
 }
