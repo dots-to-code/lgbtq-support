@@ -1,5 +1,7 @@
+const functionPath = "/.netlify/functions";
+
 const getData = (funcName) => {
-  return fetch(`/.netlify/functions/${funcName}`)
+  return fetch(`${functionPath}/${funcName}`)
     .then((result) => result.json())
     .then((result) => {
       return result.records;
