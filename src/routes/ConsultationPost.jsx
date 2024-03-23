@@ -17,17 +17,15 @@ export default function ConsultationPost() {
   const [myAccountData, setMyAccountData] = useState(() => {
     const userData = users.find((u) => u.fields.email === user.email);
     const children = userData.fields.children ? JSON.parse(userData.fields.children) : "";
-    return userData ? { ...userData, children: children } : null;
+    return userData ? { ...userData.fields, id: userData.id, children: children } : null;
   });
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const [openSnackbar, setOpenSnackbar] = useState(true);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [isInitialRender, setIsInitialRender] = useState(true);
 
   const ContainerStyle = {
-
-
-    
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -56,6 +54,8 @@ export default function ConsultationPost() {
 
   const handleSubmit = async () => {
     setLoading(true);
+    console.log([myAccountData.id]);
+    console.log(myAccountData);
     const payload = {
       userId: [myAccountData.id],
       content: inputValue,
@@ -64,14 +64,16 @@ export default function ConsultationPost() {
       setLoading(false);
       setOpen(true);
       setOpenSnackbar(true);
+      setIsInitialRender(false);
     });
   };
 
   useEffect(() => {
-    if (!openSnackbar) {
+    if (!openSnackbar && !isInitialRender) {
       navigate(`/consultation`);
     }
-  }, [openSnackbar, navigate]);
+  }, [openSnackbar, navigate, isInitialRender]);
+
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
