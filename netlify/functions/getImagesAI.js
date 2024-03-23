@@ -2,13 +2,15 @@ const { config } = require('dotenv');
 config();
 const axios = require('axios');
 
-const fetchImagesFromDALLE = async (styleTags) => {
+exports.handler = async (event) => {
   try {
+    const { prompt } = JSON.parse(event.body);
+    console.log('Prompr netlify function', prompt);
     const apiKey = process.env.DALLE_API_KEY;
     const response = await axios.post(
       'https://api.openai.com/v1/davinci-images',
       {
-        prompt: styleTags,
+        prompt: prompt,
         max_tokens: 150,
         temperature: 0.7,
         top_p: 1,
@@ -22,18 +24,21 @@ const fetchImagesFromDALLE = async (styleTags) => {
       },
     );
 
-    return response.data.images;
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response.data.images),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
   } catch (error) {
     console.error('Error fetching images from DALL·E:', error);
-    throw error;
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Error fetching images from DALL·E' }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
   }
 };
-
-// Example usage:
-const styleTags = ['casual clothing', 'formal wear', 'sportswear'];
-fetchImagesFromDALLE(styleTags)
-  .then((images) => {
-    console.log('Images:', images);
-    // Handle the images in your frontend
-  })
-  .catch((error) => console.error('Error:', error));

@@ -3,10 +3,10 @@ import { TextField, Button, Box, Typography, Stack, MenuItem } from '@mui/materi
 import { postData } from '../utils/postData';
 import { BaseLayout } from '../components/BaseLayout';
 import { SubTitleStyle, ButtonStyle } from '../styles';
-import ColorPalette from './Colors';
-import ClothesStyles from './ClothesStyles';
+import ColorPalette from './components/Colors';
+import ClothesStyles from './components/ClothesStyles';
+import PatternStyles from './components/PatternStyles';
 import { GENDER } from '../constants';
-import { clothingStyles } from './ClothesStyles';
 
 export default function Diagnosis() {
   const [age, setAge] = useState('');
@@ -15,6 +15,7 @@ export default function Diagnosis() {
   const [frame, setFrame] = useState(0);
   const [selectedColors, setSelectedColors] = useState('');
   const [selectedStyle, setSelectedStyle] = useState('');
+  const [selectedPattern, setSelectedPattern] = useState('');
 
   // DALLe images analysis
   const [aiImages, setAiImages] = useState([]);
@@ -33,31 +34,30 @@ export default function Diagnosis() {
     height: '40px',
   };
 
-  const handleNext = () => frame < 2 && setFrame(frame + 1);
+  const handleNext = () => frame < 4 && setFrame(frame + 1);
 
-  useEffect(() => {
-    if (selectedStyle) {
-      const fetchDefaultImages = async () => {
-        try {
-          const payload = `Generate  ${selectedStyle} style outfits 
-          for a ${age} years old ${gender} child 
-          in these color shades ${selectedColors}`;
-          const result = await postData(payload, 'getImagesAI');
-          setAiImages(result);
-        } catch (error) {
-          console.error('Error fetching default images:', error);
-        }
-      };
-
-      fetchDefaultImages();
-    }
-  }, [age, gender, selectedStyle]);
+  // useEffect(() => {
+  //   if (selectedStyle) {
+  //     // const fetchDefaultImages = async () => {
+  //     //   try {
+  //     //     const payload = `Generate  ${selectedStyle} style outfits
+  //     //     for a ${age} years old ${gender} child
+  //     //     in these color shades ${selectedColors}`;
+  //     //     const result = await postData(payload, 'getImagesAI');
+  //     //     setAiImages(result);
+  //     //     console.log('DATA', result);
+  //     //   } catch (error) {
+  //     //     console.error('Error fetching default images:', error);
+  //     //   }
+  //     };
+  //   }
+  // }, [age, gender, selectedStyle]);
 
   return (
     <BaseLayout>
       <Stack sx={{ alignItems: 'center', textAlign: 'center', width: '335px', margin: 'auto' }}>
-        <h1 style={{ alignSelf: 'center', ...SubTitleStyle }}>{name ? `${name}さんの好きな服` : '好きな服診断'}</h1>
-        <Stack sx={{ height: '60vh' }}>
+        <h1 style={{ alignSelf: 'center' }}>好きな服診断</h1>
+        <Stack>
           {frame === 0 && (
             <>
               <TextField
@@ -114,69 +114,34 @@ export default function Diagnosis() {
             <>
               <Typography>好きなものを選んでね</Typography>
               <ClothesStyles selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} />
-              {aiImages.length && (
-                <div>
-                  <h2>AIがおすすめする服</h2>
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(2, 1fr)',
-                      gap: '12px',
-                      justifyContent: 'center',
-                      margin: '12px',
-                    }}
-                  >
-                    {aiImages.map((imageUrl, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          padding: '12px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-                          backgroundColor: 'white',
-                          borderRadius: '8px',
-                          border:
-                            selectedStyle === clothingStyles[index].name
-                              ? '2px solid #EB6159'
-                              : '2px solid transparent',
-                          transition: 'transform 0.3s ease-in-out',
-                          '&:hover': {
-                            transform: 'translateY(-3px)',
-                          },
-                        }}
-                        onClick={() => setSelectedStyle(clothingStyles[index].name)}
-                      >
-                        <h3>{clothingStyles[index].name}</h3>
-                        <img
-                          src={imageUrl}
-                          alt={clothingStyles[index].name}
-                          style={{ width: '200px', height: '200px' }}
-                        />
-                      </Box>
-                    ))}
-                  </div>
-                </div>
-              )}
             </>
           )}
+          {frame === 3 && (
+            <>
+              <Typography>好きなものを選んでね</Typography>
+              <PatternStyles selectedPattern={selectedPattern} setSelectedPattern={setSelectedPattern} />
+            </>
+          )}
+          <Button
+            style={{
+              ...ButtonStyle,
+              marginTop: '12px',
+              '&:hover': {
+                cursor: 'pointer !important',
+                backgroundColor: '#EB6159',
+              },
+            }}
+            disabled={
+              (frame === 0) & (!age || !name) ||
+              (frame === 1 && !selectedColors.length) ||
+              (frame === 2 && !selectedStyle) ||
+              (frame === 3 && !selectedPattern)
+            }
+            onClick={handleNext}
+          >
+            つぎへ
+          </Button>
         </Stack>
-        <Button
-          style={{
-            ...ButtonStyle,
-            marginTop: '12px',
-            '&:hover': {
-              cursor: 'pointer !important',
-              backgroundColor: '#EB6159',
-            },
-            position: 'fixed',
-            bottom: '90px',
-          }}
-          disabled={(frame === 0) & (!age || !name) || (frame === 1 && !selectedColors.length)}
-          onClick={handleNext}
-        >
-          つぎへ
-        </Button>
       </Stack>
     </BaseLayout>
   );

@@ -63,10 +63,6 @@ const ColorPalette = ({ selectedColors, setSelectedColors }) => {
               backgroundColor: 'white',
               borderRadius: '8px',
               border: selectedColors.includes(baseColor) ? '2px solid #EB6159' : '2px solid transparent',
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': {
-                transform: 'translateY(-3px)',
-              },
             }}
             onClick={() => handleGroupClick(baseColor)}
           >
