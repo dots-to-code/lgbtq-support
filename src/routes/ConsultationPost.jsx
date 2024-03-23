@@ -1,30 +1,23 @@
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { useAuth0 } from '@auth0/auth0-react';
 import { BaseLayout } from '../components/BaseLayout';
 import { OvalButton } from '../components/OvalButton';
 import { SpeechBubble } from '../components/SpeechBubble';
 import { Container, TextField } from '@mui/material';
+import { usersSelector } from '../state';
 
 export default function ConsultationPost() {
+  const { user } = useAuth0();
   const [inputValue, setInputValue] = useState('');
+  const users = useRecoilValue(usersSelector);
+  const [myAccountData, setMyAccountData] = useState(() => {
+    const userData = users.find((u) => u.fields.email === user.email);
+    const children = userData.fields.children ? JSON.parse(userData.fields.children) : "";
+    return userData ? { ...userData, children: children } : null;
+  });
 
-  const user = {
-    id: 1,
-    name: 'コウテイペンギン',
-    content:
-      '相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります相談内容が入ります',
-    children: [
-      {
-        id: 1,
-        birthday: '2020-03-16',
-        gender: 'MALE',
-      },
-      {
-        id: 2,
-        birthday: '2024-01-16',
-        gender: 'MALE',
-      },
-    ],
-  };
+  console.log(myAccountData);
 
   const ContainerStyle = {
     display: 'flex',
@@ -57,7 +50,7 @@ export default function ConsultationPost() {
   return (
     <BaseLayout>
       <Container maxWidth="sm" sx={ContainerStyle}>
-        <SpeechBubble user={user} customStyle={{ marginBottom: '35px' }}>
+        <SpeechBubble user={myAccountData} customStyle={{ marginBottom: '35px' }}>
           <TextField
             placeholder="入力する"
             multiline

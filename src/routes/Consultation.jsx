@@ -134,7 +134,7 @@ export default function Consultation() {
     };
 
     const handleClickDetail = (item) => () => {
-      navigate(`/consultation/${item.id}`, { state: { selectedConsultation: item } });
+      navigate(`/consultation/${item.id}`);
     };
 
     return (
