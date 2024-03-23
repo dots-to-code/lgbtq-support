@@ -50,6 +50,7 @@ export default function Consultation() {
           });
 
           const consultationList = await getData('getconsultations');
+          consultationList.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
           setConsultations(consultationList);
 
           const list = consultationList.map((consultation) => {

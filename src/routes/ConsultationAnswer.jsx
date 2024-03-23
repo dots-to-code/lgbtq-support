@@ -7,8 +7,8 @@ import { UserInfo } from '../components/UserInfo';
 import { Container, Typography, Box, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import Loading from '../components/Loading';
-import { getConsultationById, getUserById } from '../utils/getData';
-import { useParams } from 'react-router-dom';
+import { getConsultationById, getUserById, getData } from '../utils/getData';
+import { useParams, useNavigate } from 'react-router-dom';
 import { consultationState, usersSelector } from '../state';
 import { postData } from '../utils/postData';
 
@@ -20,7 +20,8 @@ export default function ConsultationAnswer() {
   const [consultation, setConsultation] = useRecoilState(consultationState);
   const users = useRecoilValue(usersSelector);
   const [myAccountData, setMyAccountData] = useState(users.find((u) => u.fields.email === user.email).fields);
-
+  const [userId, setUserId] = useState(0);
+  const navigate = useNavigate();
   const textAreaRef = useRef(null);
 
   const fetchData = async () => {
@@ -31,7 +32,8 @@ export default function ConsultationAnswer() {
       user_id: [result.id],
       children: JSON.parse(consultationUserRes.children),
     };
-    console.log(myAccountData);
+    const loginUser = await getData('getusers').then((res) => res.find((u) => u.fields.email === user.email));
+    setUserId(loginUser.id);
     return { ...result, user: consultationUser };
   };
 
@@ -69,13 +71,13 @@ export default function ConsultationAnswer() {
 
   useEffect(() => {
     setLoading(true);
-    const getData = async () => {
+    const getConsultationData = async () => {
       const result = await fetchData();
       setConsultation(result);
     };
     (async () => {
       try {
-        getData();
+        getConsultationData();
       } catch (error) {
         console.error('An error occurred:', error);
       } finally {
@@ -117,7 +119,7 @@ export default function ConsultationAnswer() {
       {
         fields: {
           consultation_id: [consultationId],
-          user_id: [consultation.user_id[0]],
+          user_id: [userId],
           content: inputValue,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
@@ -126,8 +128,7 @@ export default function ConsultationAnswer() {
     ];
     try {
       await postData({ records }, 'postConsultationAnswer');
-      const result = await fetchData();
-      setConsultation(result);
+      navigate(`/consultation/${consultationId}`);
     } catch (error) {
       console.error('An error occurred:', error);
     } finally {

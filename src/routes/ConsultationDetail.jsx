@@ -82,9 +82,9 @@ export default function ConsultationDetail() {
         const targetUser = usersMap[consultation.user_id];
         const user = {
           ...targetUser,
+          name: targetUser.fields.name,
           children: JSON.parse(targetUser.fields.children),
         };
-
         const targetConsultation = {
           ...consultation,
           user: user,
@@ -96,7 +96,8 @@ export default function ConsultationDetail() {
               const user = {
                 id: usersMap[item.fields.user_id[0]].id,
                 name: usersMap[item.fields.user_id[0]].fields.name,
-                children: JSON.parse(usersMap[item.fields.user_id[0]].fields.children),
+                // TODO: エラーになるので一旦コメントアウト
+                // children: JSON.parse(usersMap[item.fields.user_id[0]].fields.children),
               };
               return {
                 ...item,
@@ -105,7 +106,8 @@ export default function ConsultationDetail() {
             }
           })
           .filter((item) => item !== undefined);
-        console.log(responseList);
+
+        responseList.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
         setConsultationResponse(responseList);
         setConsultation(targetConsultation);
       } catch (error) {
@@ -116,6 +118,7 @@ export default function ConsultationDetail() {
     };
 
     getInitData();
+    console.log('consultation:', consultation);
   }, []);
 
   return (
