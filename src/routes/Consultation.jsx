@@ -41,7 +41,7 @@ export default function Consultation() {
           if (!localStorage.getItem('penfamily-registered')) {
             await postData(loggedUser, 'postNewUser').then(() => localStorage.setItem('penfamily-registered', 'true'));
           }
-          const usersRes = await getData('users');
+          const usersRes = await getData('getusers');
           setUsers(usersRes);
 
           const usersMap = [];
@@ -51,7 +51,7 @@ export default function Consultation() {
 
           let consultationList = consultations;
           if (consultations.length === 0) {
-            consultationList = await getData('consultations');
+            consultationList = await getData('getconsultations');
             setConsultations(consultationList);
           }
 
