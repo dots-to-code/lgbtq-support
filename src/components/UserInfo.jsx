@@ -25,13 +25,15 @@ export const UserInfo = ({ user }) => {
   };
 
   const displayChilden = (children) => {
-    return children.map((child, index) => {
-      const birthday = new Date(child.birthday);
-      const today = new Date();
-      const age = today.getFullYear() - birthday.getFullYear();
-
-      return `${age}さい ${GENDER[child.gender]}${children.length - 1 > index ? ' / ' : ''}`;
-    });
+    if (children && children.length > 0) {
+      return children.map((child, index) => {
+        const birthday = new Date(child.birthday);
+        const today = new Date();
+        const age = today.getFullYear() - birthday.getFullYear();
+        return `${age}さい ${GENDER[child.gender]}${children.length - 1 > index ? ' / ' : ''}`;
+      });
+    }
+    return null;
   };
 
   return (
@@ -39,7 +41,7 @@ export const UserInfo = ({ user }) => {
       <Box sx={RootStyle}>
         <AccountCircleRoundedIcon fontSize={'large'} sx={IconStyle} />
         <Box sx={UserInfoStyle}>
-          <Typography>{user.name}</Typography>
+          <Typography sx={{ fontSize: '15px' }}>{user.fields.name}</Typography>
           <Typography sx={ChildrenStyle}>{displayChilden(user.children)}</Typography>
         </Box>
       </Box>

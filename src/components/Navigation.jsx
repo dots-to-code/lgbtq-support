@@ -22,7 +22,7 @@ export default function FixedBottomNavigation() {
       fontSize: '10px',
     },
   };
-  const pageUrls = ['/consultation', '/share', '/diagnosis', '/information', '/settings'];
+  const pageUrls = ['/consultation', '/share', '', '/information', '/settings'];
   const location = useLocation();
   const [value, setValue] = React.useState(pageUrls.findIndex((url) => url === location.pathname) || 0);
   const ref = React.useRef(null);
@@ -39,7 +39,13 @@ export default function FixedBottomNavigation() {
         <BottomNavigation showLabels value={value} onChange={handleClickNavigation}>
           <BottomNavigationAction sx={navButtonStyling} label="相談" showLabel icon={<QuestionAnswerRoundedIcon />} />
           <BottomNavigationAction sx={navButtonStyling} label="シェア" showLabel icon={<MenuBookRoundedIcon />} />
-          <BottomNavigationAction sx={navButtonStyling} label="診断" showLabel icon={<FavoriteBorderRoundedIcon />} />
+          <BottomNavigationAction
+            href="https://www.figma.com/proto/zshGfuTY4m3qVm4mP6Ox1f/PENFAM?page-id=0%3A1&type=design&node-id=23-2&viewport=245%2C-178%2C0.27&t=8NSmorKUViaWSCSe-1&scaling=scale-down&starting-point-node-id=23%3A2&mode=design"
+            sx={navButtonStyling}
+            label="診断"
+            showLabel
+            icon={<FavoriteBorderRoundedIcon />}
+          />
           <BottomNavigationAction
             sx={navButtonStyling}
             label="お知らせ"

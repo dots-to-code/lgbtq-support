@@ -41,7 +41,7 @@ export default function Consultation() {
           if (!localStorage.getItem('penfamily-registered')) {
             await postData(loggedUser, 'postNewUser').then(() => localStorage.setItem('penfamily-registered', 'true'));
           }
-          const usersRes = await getData('users');
+          const usersRes = await getData('getusers');
           setUsers(usersRes);
 
           const usersMap = [];
@@ -49,11 +49,8 @@ export default function Consultation() {
             usersMap[user.id] = user;
           });
 
-          let consultationList = consultations;
-          if (consultations.length === 0) {
-            consultationList = await getData('consultations');
-            setConsultations(consultationList);
-          }
+          const consultationList = await getData('getconsultations');
+          setConsultations(consultationList);
 
           const list = consultationList.map((consultation) => {
             const userId = consultation.fields.user_id[0];
@@ -137,7 +134,7 @@ export default function Consultation() {
     };
 
     const handleClickDetail = (item) => () => {
-      navigate(`/consultation/${item.id}`, { state: { selectedConsultation: item } });
+      navigate(`/consultation/${item.id}`);
     };
 
     return (
