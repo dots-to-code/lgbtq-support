@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { TextField, Button, Typography, Stack } from '@mui/material';
 import { postPrompt } from '../utils/postPrompt';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,15 @@ import Loading from '../components/Loading';
 import ColorPalette, { colorStyles } from './components/Colors';
 import ClothesStyles, { clothingStyles } from './components/ClothesStyles';
 import PatternStyles, { patternStyles } from './components/PatternStyles';
+import * as htmlToImage from 'html-to-image';
+
+const createFileName = (extension, ...names) => {
+  if (!extension) {
+    return '';
+  }
+
+  return `${names.join('')}.${extension}`;
+};
 
 export default function Diagnosis() {
   const [age, setAge] = useState('');
@@ -18,6 +27,31 @@ export default function Diagnosis() {
   const [selectedPattern, setSelectedPattern] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const divRef = (useRef < HTMLDivElement) | (null > null);
+  const [loadingScreenshotDownload, setLoadingScreenshotDownload] = useState(false);
+
+  const takeScreenShot = async (node) => {
+    setLoadingScreenshotDownload(true);
+    if (!node) {
+      throw new Error('Invalid element reference.');
+    }
+    const dataURI = await htmlToImage.toJpeg(node, { backgroundColor: '#C4F1F9' });
+    return dataURI;
+  };
+
+  const download = (image, { name = 'penfam', extension = 'jpg' }) => {
+    const a = document.createElement('a');
+    a.href = image;
+    a.download = createFileName(extension, name);
+    a.click();
+    setLoadingScreenshotDownload(false);
+  };
+
+  const downloadScreenshot = () => {
+    if (divRef.current) {
+      takeScreenShot(divRef.current).then(download);
+    }
+  };
 
   // DALLe images analysis
   const [aiImages, setAiImages] = useState([]);
@@ -57,11 +91,6 @@ export default function Diagnosis() {
       } catch (error) {
         console.error('Error fetching default images:', error);
         setAiImages([
-          // {
-          //   revised_prompt:
-          //     'Create an image of a child, about 7 years old, decked out in Harajuku style fashion. The clothing should be in pale, soothing colors - think pastels like light pink, baby blue, mint green, and soft lavender. The outfit could include frilly skirts, oversized bows, knee-high socks, lace-trimmed cardigans, and other cute, whimsical elements characteristic of Harajuku style. The child should appear happy and confident, embracing the playful and imaginative spirit of this distinctive street fashion style. Remember to include a variety of textures and patterns, from furs to polka dots, for added visual interest.',
-          //   url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-Itu6A6q1sfgadrTzrb41aHCm/user-ms47bQMLzXS6ptoY5G1EXX6h/img-MheDRWEQ8B7NDsku2qR0PXKx.png?st=2024-03-24T11%3A54%3A47Z&se=2024-03-24T13%3A54%3A47Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-03-23T21%3A19%3A44Z&ske=2024-03-24T21%3A19%3A44Z&sks=b&skv=2021-08-06&sig=K9A6QjJe/bzz0dFZZLFN9U7gYIZnzQiBouAlS6AFDLU%3D',
-          // },
           // {
           //   revised_prompt:
           //     'Generate an image showcasing different beautiful outfit ideas for a 4-year-old child, predominantly featuring various shades of blue. The outfits should be aspiring, covering all seasons, and include details such as jackets, dresses, hats, scarves, shoes, and socks. The clothing pieces should demonstrate a mix of textures, patterns, and designs, and should be styled in an aesthetic way to evoke a sense of inspiration. The backdrop could be a minimalist, neutral tone to keep the focus on the outfits.',
@@ -216,6 +245,7 @@ export default function Diagnosis() {
                 >
                   {aiImages.map((image, i) => (
                     <img
+                      ref={divRef}
                       key={i}
                       src={image.url || ''}
                       style={{
@@ -227,6 +257,21 @@ export default function Diagnosis() {
                       alt="ai generated image of outfits"
                     />
                   ))}
+                  <Button
+                    style={{
+                      ...ButtonStyle,
+                      marginTop: '12px',
+                      '&:hover': {
+                        cursor: 'pointer !important',
+                        backgroundColor: '#EB6159',
+                      },
+                    }}
+                    onClick={downloadScreenshot}
+                    loadingText={'読み込み中...'}
+                    isLoading={loadingScreenshotDownload}
+                  >
+                    ダウンロード
+                  </Button>
                   <Button
                     style={{
                       ...ButtonStyle,
