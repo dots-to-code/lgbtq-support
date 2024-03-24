@@ -59,6 +59,11 @@ export default function Diagnosis() {
         setAiImages([
           // {
           //   revised_prompt:
+          //     'Create an image of a child, about 7 years old, decked out in Harajuku style fashion. The clothing should be in pale, soothing colors - think pastels like light pink, baby blue, mint green, and soft lavender. The outfit could include frilly skirts, oversized bows, knee-high socks, lace-trimmed cardigans, and other cute, whimsical elements characteristic of Harajuku style. The child should appear happy and confident, embracing the playful and imaginative spirit of this distinctive street fashion style. Remember to include a variety of textures and patterns, from furs to polka dots, for added visual interest.',
+          //   url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-Itu6A6q1sfgadrTzrb41aHCm/user-ms47bQMLzXS6ptoY5G1EXX6h/img-MheDRWEQ8B7NDsku2qR0PXKx.png?st=2024-03-24T11%3A54%3A47Z&se=2024-03-24T13%3A54%3A47Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-03-23T21%3A19%3A44Z&ske=2024-03-24T21%3A19%3A44Z&sks=b&skv=2021-08-06&sig=K9A6QjJe/bzz0dFZZLFN9U7gYIZnzQiBouAlS6AFDLU%3D',
+          // },
+          // {
+          //   revised_prompt:
           //     'Generate an image showcasing different beautiful outfit ideas for a 4-year-old child, predominantly featuring various shades of blue. The outfits should be aspiring, covering all seasons, and include details such as jackets, dresses, hats, scarves, shoes, and socks. The clothing pieces should demonstrate a mix of textures, patterns, and designs, and should be styled in an aesthetic way to evoke a sense of inspiration. The backdrop could be a minimalist, neutral tone to keep the focus on the outfits.',
           //   url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-Itu6A6q1sfgadrTzrb41aHCm/user-ms47bQMLzXS6ptoY5G1EXX6h/img-mQ19vTdvp6fjy6B0Tt6lC3s7.png?st=2024-03-24T11%3A01%3A58Z&se=2024-03-24T13%3A01%3A58Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-03-23T21%3A06%3A53Z&ske=2024-03-24T21%3A06%3A53Z&sks=b&skv=2021-08-06&sig=Dcr6UuV3astfsUe3WxTjBMmjMfmTOwzuzgg676Xoffw%3D',
           // },
