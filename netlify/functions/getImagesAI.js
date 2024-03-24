@@ -9,12 +9,9 @@ exports.handler = async (event) => {
     const response = await axios.post(
       'https://api.openai.com/v1/images/generations',
       {
+        model: 'dall-e-3',
         prompt: prompt,
-        max_tokens: 450,
-        temperature: 0.7,
-        top_p: 1,
-        n: 6, // Number of images to generate
-        size: '1024x1024',
+        n: 1, // Number of images to generate
       },
       {
         headers: {

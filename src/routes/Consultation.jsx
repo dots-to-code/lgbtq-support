@@ -31,6 +31,7 @@ export default function Consultation() {
             fields: {
               name: user.name,
               email: user.email,
+              picture: user.picture,
             },
           },
         ],
