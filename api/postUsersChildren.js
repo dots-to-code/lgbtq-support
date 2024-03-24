@@ -1,9 +1,7 @@
-const { config } = require('dotenv');
-config();
 const axios = require('axios');
 
-exports.handler = async (event) => {
-  const { content, email, childrenPayload } = JSON.parse(event.body); // Extract email and children payload from the request body
+module.exports = async (req, res) => {
+  const { content, email, childrenPayload } = req.body;
 
   const baseURL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/users`;
 
@@ -27,13 +25,7 @@ exports.handler = async (event) => {
     if (userRecords.length > 0) {
       userId = userRecords[0].id; // Get the user's record ID
     } else {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ error: 'User not found in Airtable' }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
+      return res.status(404).json({ error: 'User not found in Airtable' });
     }
 
     // If user found, update the user record with children payload
@@ -53,22 +45,8 @@ exports.handler = async (event) => {
       },
     );
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(updateResponse.data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    return res.status(200).json(updateResponse.data);
   } catch (error) {
-    return {
-      statusCode: error.response ? error.response.status : 500,
-      body: JSON.stringify({
-        error: error.message,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    return res.status(error.response ? error.response.status : 500).json({ error: error.message });
   }
 };

@@ -1,39 +1,47 @@
-const functionPath = '/.netlify/functions';
+const functionPath = '/api'; // Assuming your Vercel functions are in the '/api' directory
 
-const getData = (funcName) => {
-  return fetch(`/.netlify/functions/${funcName}`)
-    .then((result) => result.json())
-    .then((result) => {
-      return result.records;
-    })
-    .catch((err) => console.error(err));
+const getData = async (funcName) => {
+  try {
+    const result = await fetch(`${functionPath}/${funcName}`);
+    const data = await result.json();
+    return data.records;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 };
 
-const getUserById = (id) => {
-  return fetch(`${functionPath}/getUser?id=${id}`)
-    .then((result) => result.json())
-    .then((result) => {
-      return result.fields;
-    })
-    .catch((err) => console.error(err));
+const getUserById = async (id) => {
+  try {
+    const result = await fetch(`${functionPath}/getUser?id=${id}`);
+    const data = await result.json();
+    return data.fields;
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
 };
 
-const getConsultationById = (id) => {
-  return fetch(`${functionPath}/getConsultationDetail?id=${id}`)
-    .then((result) => result.json())
-    .then((result) => {
-      return result.fields;
-    })
-    .catch((err) => console.error(err));
+const getConsultationById = async (id) => {
+  try {
+    const result = await fetch(`${functionPath}/getConsultationDetail?id=${id}`);
+    const data = await result.json();
+    return data.fields;
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
 };
 
-const getConsultationResponseById = (id) => {
-  return fetch(`${functionPath}/getConsultationResponse`)
-    .then((result) => result.json())
-    .then((result) => {
-      return result.records;
-    })
-    .catch((err) => console.error(err));
+const getConsultationResponseById = async (id) => {
+  try {
+    const result = await fetch(`${functionPath}/getConsultationResponse?id=${id}`);
+    const data = await result.json();
+    return data.records;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 };
 
 export { getData, getUserById, getConsultationById, getConsultationResponseById };

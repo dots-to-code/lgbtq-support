@@ -1,10 +1,8 @@
-const { config } = require('dotenv');
-config();
 const axios = require('axios');
 
-exports.handler = async (event) => {
+module.exports = async (req, res) => {
   try {
-    const payload = JSON.parse(event.body);
+    const payload = req.body;
     const { email } = payload.records[0].fields;
 
     // URL for checking if user exists
@@ -21,13 +19,7 @@ exports.handler = async (event) => {
 
     // If user already exists, return silently with 200 status code
     if (checkResponse.data.records.length > 0) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ records: [] }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
+      return res.status(200).json({ records: [] });
     } else {
       // URL for posting data to Airtable to register new user
       const postURL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/users`;
@@ -40,23 +32,9 @@ exports.handler = async (event) => {
         },
       });
 
-      return {
-        statusCode: 200,
-        body: JSON.stringify(response.data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
+      return res.status(200).json(response.data);
     }
   } catch (error) {
-    return {
-      statusCode: error.response ? error.response.status : 500,
-      body: JSON.stringify({
-        error: error.message,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    return res.status(error.response ? error.response.status : 500).json({ error: error.message });
   }
 };

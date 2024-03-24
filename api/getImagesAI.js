@@ -1,10 +1,8 @@
-const { config } = require('dotenv');
-config();
 const axios = require('axios');
 
-exports.handler = async (event) => {
+module.exports = async (req, res) => {
   try {
-    const { prompt } = JSON.parse(event.body);
+    const { prompt } = req.body;
     const apiKey = process.env.DALLE_API_KEY;
     const response = await axios.post(
       'https://api.openai.com/v1/images/generations',
@@ -21,21 +19,9 @@ exports.handler = async (event) => {
       },
     );
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response.data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    return res.status(200).json(response.data);
   } catch (error) {
     console.error('Error generating image:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Error generating image:' }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    return res.status(500).json({ error: 'Error generating image:' });
   }
 };
