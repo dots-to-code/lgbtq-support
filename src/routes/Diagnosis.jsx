@@ -198,6 +198,19 @@ export default function Diagnosis() {
                   >
                     診断をおわる
                   </Button>
+                  <Button
+                    style={{
+                      ...ButtonStyle,
+                      marginTop: '12px',
+                      backgroundColor: '#F6ADA8',
+                      '&:hover': {
+                        cursor: 'pointer !important',
+                      },
+                    }}
+                    onClick={() => navigate(0)}
+                  >
+                    もう一度診断する
+                  </Button>
                 </div>
               ) : null}
             </>
