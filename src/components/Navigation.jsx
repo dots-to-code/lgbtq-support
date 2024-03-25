@@ -5,7 +5,7 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
-import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
+import StarIcon from '@mui/icons-material/Star';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import Paper from '@mui/material/Paper';
@@ -22,7 +22,7 @@ export default function FixedBottomNavigation() {
       fontSize: '10px',
     },
   };
-  const pageUrls = ['/consultation', '/share', '/diagnosis', '/information', '/settings'];
+  const pageUrls = ['/consultation', '/share', '/diagnosis', '/favorites', '/settings'];
   const location = useLocation();
   const [value, setValue] = React.useState(pageUrls.findIndex((url) => url === location.pathname) || 0);
   const ref = React.useRef(null);
@@ -49,9 +49,9 @@ export default function FixedBottomNavigation() {
           /> */}
           <BottomNavigationAction
             sx={navButtonStyling}
-            label="お知らせ"
+            label="お気に入り"
             showLabel
-            icon={<NotificationsNoneRoundedIcon />}
+            icon={<StarIcon />}
           />
           <BottomNavigationAction
             sx={navButtonStyling}
