@@ -1,6 +1,6 @@
-const postData = (payload, funcName) => {
+const deleteData = (payload, funcName) => {
   return fetch(`/.netlify/functions/${funcName}`, {
-    method: 'POST',
+    method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -21,4 +21,4 @@ const postData = (payload, funcName) => {
     });
 };
 
-export { postData };
+export { deleteData };
