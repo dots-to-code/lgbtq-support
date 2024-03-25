@@ -32,8 +32,8 @@ export default function Favorites() {
   const fetchData = async () => {
     const result = await getFavriteByUserId(myAccountData.userId);
     const consultationIds = result.map((item) => item.fields.consultation_id[0]);
-    console.log(consultationIds);
     const consultationList = await getConsultationsByIds(consultationIds);
+    consultationList.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
 
     return consultationList;
   };
@@ -138,12 +138,18 @@ export default function Favorites() {
 
   return (
     <BaseLayout>
-      <Box sx={{ m: 4, display: 'flex', justifyContent: 'center' }}>
-        <SearchInput />
-      </Box>
-      <Container maxWidth="sm" sx={{ p: 0, position: 'relative' }}>
-        <ConsultationList />
-      </Container>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <Box sx={{ m: 4, display: 'flex', justifyContent: 'center' }}>
+            <SearchInput />
+          </Box>
+          <Container maxWidth="sm" sx={{ p: 0, position: 'relative' }}>
+            <ConsultationList />
+          </Container>
+        </>
+      )}
     </BaseLayout>
 
   );
