@@ -31,6 +31,7 @@ export default function ConsultationAnswer() {
       ...consultationUserRes,
       user_id: [result.id],
       children: consultationUserRes.children ? JSON.parse(consultationUserRes.children) : '',
+      picture: consultationUserRes.picture || '',
     };
     const loginUser = await getData('getusers').then((res) => res.find((u) => u.fields.email === user.email));
     setUserId(loginUser.id);
