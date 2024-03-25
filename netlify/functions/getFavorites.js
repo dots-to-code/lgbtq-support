@@ -4,11 +4,15 @@ const axios = require('axios');
 
 exports.handler = async (event) => {
   const { userId, consultationId } = event.queryStringParameters;
-  const URL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/favorites?filterByFormula=AND({user_id}='recGdaMBRpvXacS96',{consultation_id}='1')`;
+  const URL = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE}/favorites`;
+
   try {
     const response = await axios.get(URL, {
       headers: {
         Authorization: `Bearer ${process.env.AIRTABLE_PERSONAL_TOKEN}`,
+      },
+      params: {
+        filterByFormula: `AND({user_id}='${userId}',{consultation_id}='${consultationId}')`,
       },
     });
 
@@ -22,9 +26,7 @@ exports.handler = async (event) => {
   } catch (error) {
     return {
       statusCode: error.response ? error.response.status : 500,
-      body: JSON.stringify({
-        error: error.message,
-      }),
+      body: JSON.stringify({ error: error.message }),
       headers: {
         'Content-Type': 'application/json',
       },
