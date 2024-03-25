@@ -39,7 +39,15 @@ export const UserInfo = ({ user, hiddenChildren = false }) => {
   return (
     <>
       <Box sx={RootStyle}>
-        <AccountCircleRoundedIcon fontSize={'large'} sx={IconStyle} />
+        {user.picture || user.fields?.picture ? (
+          <img
+            style={{ borderRadius: '50%', width: '30px', height: '30px', marginRight: '8px' }}
+            alt="user profile"
+            src={user.picture || user.fields?.picture}
+          />
+        ) : (
+          <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
+        )}
         <Box sx={UserInfoStyle}>
           <Typography sx={{ fontSize: '15px' }}>{user.name}</Typography>
           {hiddenChildren ? <></> : <Typography sx={ChildrenStyle}>{displayChilden(user.children)}</Typography>}

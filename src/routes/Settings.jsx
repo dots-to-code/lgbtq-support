@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useAuth0 } from '@auth0/auth0-react';
 import LogoutButton from '../components/LogoutButton';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { BaseLayout } from '../components/BaseLayout';
 import { Box, Button, Typography, Stack, TextField, MenuItem } from '@mui/material';
 import { SubTitleStyle, ButtonStyle } from '../styles';
@@ -121,6 +122,15 @@ export default function Settings() {
       <Stack sx={{ alignItems: 'center', textAlign: 'center', width: '335px', margin: 'auto' }}>
         <h1 style={{ alignSelf: 'center', ...SubTitleStyle }}>Account</h1>
         <Box sx={{ ...boxStyle }}>
+          {user.picture ? (
+            <img
+              style={{ borderRadius: '50%', width: '60px', height: '60px', marginRight: '8px' }}
+              alt="user profile"
+              src={user.picture}
+            />
+          ) : (
+            <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
+          )}
           <Typography sx={spacing}>
             <span style={LabelStyle}>名前：</span>
             <br />
