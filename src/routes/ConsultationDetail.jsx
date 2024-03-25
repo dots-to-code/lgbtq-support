@@ -97,8 +97,12 @@ export default function ConsultationDetail() {
               const user = {
                 id: usersMap[item.fields.user_id[0]].id,
                 name: usersMap[item.fields.user_id[0]].fields.name,
-                // TODO: エラーになるので一旦コメントアウト
-                // children: JSON.parse(usersMap[item.fields.user_id[0]].fields.children),
+                children: usersMap[item.fields.user_id[0]].fields.children
+                  ? JSON.parse(usersMap[item.fields.user_id[0]].fields.children)
+                  : [],
+                picture: usersMap[item.fields.user_id[0]].fields.picture
+                  ? usersMap[item.fields.user_id[0]].fields.picture
+                  : '',
               };
               return {
                 ...item,
