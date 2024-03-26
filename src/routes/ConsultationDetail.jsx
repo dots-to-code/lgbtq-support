@@ -195,10 +195,9 @@ export default function ConsultationDetail() {
         } else {
           const payload = {
             consultationId: [consultationId],
-            userId: [consultation.user.id],
+            userId: [myAccountData.id],
           };
           await postData(payload, 'postFavorites').then((res) => {
-            console.log(res);
             setIsFavorite(true);
             setFavoriteId(res.id);
           });
