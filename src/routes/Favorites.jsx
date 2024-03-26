@@ -33,34 +33,41 @@ export default function Favorites() {
     const result = await getFavriteByUserId(myAccountData.userId);
     const consultationIds = result.map((item) => item.fields.consultation_id[0]);
     const consultationList = await getConsultationsByIds(consultationIds);
-    consultationList.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
 
-    return consultationList;
+    // お気に入りの登録順でソート
+    const sortedList = consultationList.map((consultation) => {
+      const favorite = result.find((item) => item.fields.consultation_id[0] === consultation.id);
+      return {
+        ...consultation,
+        created_at: favorite.fields.created_at,
+      };
+    }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    return sortedList;
   };
 
   useEffect(() => {
-    setLoading(true);
     const getConsultationData = async () => {
-      const result = await fetchData();
-      const list = result.map((consultation) => {
-        const userId = consultation.fields.user_id[0];
-        const user = usersMap[userId];
-        return {
-          ...consultation,
-          user: user,
-        };
-      });
-      setFavoriteConsultations(list);
-    };
-    (async () => {
+      setLoading(true);
       try {
-        getConsultationData();
+        const result = await fetchData();
+        const list = result.map((consultation) => {
+          const userId = consultation.fields.user_id[0];
+          const user = usersMap[userId];
+          return {
+            ...consultation,
+            user: user,
+          };
+        });
+        setFavoriteConsultations(list);
       } catch (error) {
         console.error('An error occurred:', error);
       } finally {
         setLoading(false);
       }
-    })();
+    };
+
+    getConsultationData();
   }, []);
 
   const ListItemStyle = {
