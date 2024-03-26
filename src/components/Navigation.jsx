@@ -4,7 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
-import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
+import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
 import StarIcon from '@mui/icons-material/Star';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
