@@ -164,7 +164,7 @@ export default function ConsultationDetail() {
     };
 
     const UnfavoriteButtonStyle = {
-      width: '100px',
+      width: '110px',
       height: '20px',
       fontSize: '10px',
       borderRadius: '999px',
