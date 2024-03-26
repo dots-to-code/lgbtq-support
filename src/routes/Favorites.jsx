@@ -111,7 +111,15 @@ export default function Favorites() {
           favoriteConsultations.map((item) => (
             <Box key={`box-${item.id}`} sx={ListItemStyle} onClick={handleClickDetail(item)}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
+              {item.user.fields?.picture ? (
+                  <img
+                    style={{ borderRadius: '50%', width: '30px', height: '30px', marginRight: '8px' }}
+                    alt="user profile"
+                    src={item.user.fields?.picture}
+                  />
+                ) : (
+                  <AccountCircleRoundedIcon fontSize={'large'} sx={{ color: '#393532', mr: 1 }} />
+                )}
                 {
                   <ListItemText
                     primary={item.user.fields.name}
