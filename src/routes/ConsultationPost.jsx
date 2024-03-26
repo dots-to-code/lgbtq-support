@@ -17,7 +17,8 @@ export default function ConsultationPost() {
   const [myAccountData, setMyAccountData] = useState(() => {
     const userData = users.find((u) => u.fields.email === user.email);
     const children = userData.fields.children ? JSON.parse(userData.fields.children) : '';
-    return userData ? { ...userData.fields, id: userData.id, children: children } : null;
+    const picture = userData.fields.picture || '';
+    return userData ? { ...userData.fields, id: userData.id, children: children, picture } : null;
   });
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);

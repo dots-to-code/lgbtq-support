@@ -5,7 +5,7 @@ import Consultation from './routes/Consultation';
 import ConsultationDetail from './routes/ConsultationDetail';
 import ConsultationPost from './routes/ConsultationPost';
 import ConsultationAnswer from './routes/ConsultationAnswer';
-import Share from './routes/Share';
+import Chat from './routes/Chat';
 import Diagnosis from './routes/Diagnosis';
 import Favorites from './routes/Favorites';
 import Settings from './routes/Settings';
@@ -34,7 +34,7 @@ function AppRoutes() {
           path="/consultation/answer/:id"
           element={isAuthenticated ? <ConsultationAnswer /> : <Navigate to="/" />}
         />
-        <Route path="/share" element={isAuthenticated ? <Share /> : <Navigate to="/" />} />
+        <Route path="/chat" element={isAuthenticated ? <Chat /> : <Navigate to="/" />} />
         <Route path="/diagnosis" element={isAuthenticated ? <Diagnosis /> : <Navigate to="/" />} />
         <Route path="/favorites" element={isAuthenticated ? <Favorites /> : <Navigate to="/" />} />
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/" />} />

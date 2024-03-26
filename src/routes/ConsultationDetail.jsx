@@ -97,6 +97,7 @@ export default function ConsultationDetail() {
           ...targetUser,
           name: targetUser.fields.name,
           children: targetUser.fields.children ? JSON.parse(targetUser.fields.children) : '',
+          picture: targetUser.fields?.picture || '',
         };
 
         const targetConsultation = {
@@ -107,12 +108,15 @@ export default function ConsultationDetail() {
         let responseList = consultationResponse
           .map((item) => {
             if (item.fields.consultation_id[0] === consultationId) {
-              const targetUser = usersMap[item.fields.user_id[0]];
-              const children = targetUser.fields.children ? JSON.parse(targetUser.fields.children) : '';
-              const tempUser = {
-                id: targetUser.id,
-                name: targetUser.fields.name,
-                children: children,
+              const user = {
+                id: usersMap[item.fields.user_id[0]].id,
+                name: usersMap[item.fields.user_id[0]].fields.name,
+                children: usersMap[item.fields.user_id[0]].fields.children
+                  ? JSON.parse(usersMap[item.fields.user_id[0]].fields.children)
+                  : [],
+                picture: usersMap[item.fields.user_id[0]].fields.picture
+                  ? usersMap[item.fields.user_id[0]].fields.picture
+                  : '',
               };
               return {
                 ...item,
