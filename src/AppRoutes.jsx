@@ -7,7 +7,7 @@ import ConsultationPost from './routes/ConsultationPost';
 import ConsultationAnswer from './routes/ConsultationAnswer';
 import Chat from './routes/Chat';
 import Diagnosis from './routes/Diagnosis';
-import Information from './routes/Information';
+import Favorites from './routes/Favorites';
 import Settings from './routes/Settings';
 import ErrorPage from './routes/ErrorPage';
 import Loading from './components/Loading';
@@ -36,7 +36,7 @@ function AppRoutes() {
         />
         <Route path="/chat" element={isAuthenticated ? <Chat /> : <Navigate to="/" />} />
         <Route path="/diagnosis" element={isAuthenticated ? <Diagnosis /> : <Navigate to="/" />} />
-        <Route path="/information" element={isAuthenticated ? <Information /> : <Navigate to="/" />} />
+        <Route path="/favorites" element={isAuthenticated ? <Favorites /> : <Navigate to="/" />} />
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/" />} />
         <Route path="*" element={isAuthenticated ? <ErrorPage /> : <Navigate to="/" />} />
       </Routes>
