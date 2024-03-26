@@ -91,6 +91,8 @@ export default function ConsultationDetail() {
           map[user.id] = user;
           return map;
         }, {});
+        console.log(usersMap);
+        console.log(consultation);
 
         const targetUser = usersMap[consultation.user_id];
         const tempUser = {
@@ -108,6 +110,7 @@ export default function ConsultationDetail() {
         let responseList = consultationResponse
           .map((item) => {
             if (item.fields.consultation_id[0] === consultationId) {
+              console.log(item);
               const user = {
                 id: usersMap[item.fields.user_id[0]].id,
                 name: usersMap[item.fields.user_id[0]].fields.name,
@@ -120,7 +123,7 @@ export default function ConsultationDetail() {
               };
               return {
                 ...item,
-                user: tempUser,
+                user: user,
               };
             }
           })
