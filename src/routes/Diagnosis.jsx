@@ -47,7 +47,7 @@ export default function Diagnosis() {
 
   const handleSubmit = async () => {
     if (age && selectedColors && selectedStyle && selectedPattern) {
-      const prompt = `I need ${selectedStyle} style outfits of a ${age} years old child in ${selectedColors} colors`;
+      const prompt = `Create an image of three sets of clothing displayed side by side. I need ${selectedStyle} style outfits of a ${age} years old child in ${selectedColors} colors. All clothes should be arranged neatly as if laid out on a surface for display, without any human figures, and have a clean, soft-shaded rendering to give a lifelike appearance.`;
       try {
         setLoading(true);
         const result = await postPrompt({ prompt }, 'getImagesAI');
