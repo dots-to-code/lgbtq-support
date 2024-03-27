@@ -39,11 +39,12 @@ export default function Consultation() {
 
       (async () => {
         try {
-          if (!localStorage.getItem('penfamily-registered')) {
-            await postData(loggedUser, 'postNewUser').then(() => localStorage.setItem('penfamily-registered', 'true'));
-          }
           const usersRes = await getData('getusers');
           setUsers(usersRes);
+          // If user logs in for first time, register them in airtable too
+          if (!usersRes.find((user) => user.fields.email === user.email)) {
+            await postData(loggedUser, 'postNewUser');
+          }
 
           const usersMap = [];
           usersRes.forEach((user) => {
