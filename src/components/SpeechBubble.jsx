@@ -1,9 +1,7 @@
 import { UserInfo } from '../components/UserInfo';
 import { Paper, Box, Button } from '@mui/material';
-import FilterVintageIcon from '@mui/icons-material/FilterVintage';
-import StarsSharpIcon from '@mui/icons-material/StarsSharp';
 
-export const SpeechBubble = ({ children, user, customStyle, isDispFavoButoon = false }) => {
+export const SpeechBubble = ({ children, user, customStyle, favoriteButton }) => {
   const PaperStyle = {
     width: '100%',
     height: 'auto',
@@ -32,15 +30,6 @@ export const SpeechBubble = ({ children, user, customStyle, isDispFavoButoon = f
     //   },
   };
 
-  const GoodIconStyle = {
-    margin: '10px',
-    color: '#EB6159',
-    '&:hover': {
-      color: '#EB6159',
-      opacity: 0.7,
-    },
-  };
-
   const BoxStyle = {
     width: '100%',
     alignItems: 'flex-start',
@@ -48,40 +37,11 @@ export const SpeechBubble = ({ children, user, customStyle, isDispFavoButoon = f
     justifyContent: 'space-between',
   };
 
-  const handleFavo = () => {
-    // DBに登録する？色変える？
-    window.alert('お気に入りボタンクリック');
-  };
-
-  const FavoriteButton = () => {
-    const ButtonStyle = {
-      width: '130px',
-      height: '20px',
-      fontSize: '10px',
-      borderRadius: '999px',
-      backgroundColor: '#EB6159',
-      color: '#FFFFFF',
-      fontWeight: 'bold',
-      textTransform: 'none',
-      '&:hover': {
-        backgroundColor: '#EB6159',
-        opacity: 0.7,
-      },
-    };
-
-    return (
-      <Button sx={ButtonStyle}>
-        お気に入り
-        <StarsSharpIcon fontSize={'small'} sx={{ marginLeft: '5px' }} />
-      </Button>
-    );
-  };
-
   return (
     <Paper sx={PaperStyle}>
       <Box sx={BoxStyle}>
         <UserInfo user={user} />
-        {isDispFavoButoon ? <FavoriteButton onClick={handleFavo} /> : ''}
+        {favoriteButton}
       </Box>
       {children}
     </Paper>

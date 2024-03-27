@@ -13,7 +13,7 @@ const postData = async (payload, funcName) => {
     }
 
     const result = await response.json();
-    return result.fields;
+    return result;
   } catch (error) {
     console.error('There was a problem with the fetch operation:', error);
     throw error;

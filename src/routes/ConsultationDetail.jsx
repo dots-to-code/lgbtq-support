@@ -1,18 +1,31 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAuth0 } from '@auth0/auth0-react';
 import { BaseLayout } from '../components/BaseLayout';
 import { Container, Box, Typography, Button } from '@mui/material';
+import StarsSharpIcon from '@mui/icons-material/StarsSharp';
 import { SearchInput } from '../components/SearchInput';
 import { SpeechBubble } from '../components/SpeechBubble';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getConsultationById, getData, getConsultationResponseById } from '../utils/getData';
+import { getConsultationById, getData, getConsultationResponseById, getFavriteByUserIdConsultationId } from '../utils/getData';
+import { deleteData } from '../utils/deleteData';
 import Loading from '../components/Loading';
-import { consultationsState, consultationResponseState } from '../state';
+import { postData } from '../utils/postData';
+import { consultationsState, consultationResponseState, usersSelector } from '../state';
 
 export default function ConsultationDetail() {
+  const { user } = useAuth0();
+  const users = useRecoilValue(usersSelector);
+  const [myAccountData, setMyAccountData] = useState(() => {
+    const userData = users.find((u) => u.fields.email === user.email);
+    const children = userData.fields.children ? JSON.parse(userData.fields.children) : '';
+    return userData ? { ...userData.fields, userId: userData.fields.id, id: userData.id, children: children } : null;
+  });
   const [loading, setIsLoading] = useState(true);
   const [consultation, setConsultation] = useRecoilState(consultationsState);
   const [consultationResponse, setConsultationResponse] = useRecoilState(consultationResponseState);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteId, setFavoriteId] = useState(false);
   const navigate = useNavigate();
 
   const { id: consultationId } = useParams();
@@ -67,37 +80,46 @@ export default function ConsultationDetail() {
     const getInitData = async () => {
       setIsLoading(true);
       try {
-        const [consultationResponse, usersList, consultation] = await Promise.all([
-          // consultationIdを指定して取得したいけど、LinkedIdにどうしてもうまくあてて検索できず暫定で全部取ってます
-          getData('getConsultationResponse'),
-          getData('getusers'),
-          getConsultationById(consultationId),
+        const consultation = await getConsultationById(consultationId);
+
+        const [favorite, consultationResponse] = await Promise.all([
+          getFavriteByUserIdConsultationId(myAccountData.userId, consultation.id),
+          getConsultationResponseById(consultation.id),
         ]);
 
-        const usersMap = usersList.reduce((map, user) => {
+        const usersMap = users.reduce((map, user) => {
           map[user.id] = user;
           return map;
         }, {});
+        console.log(usersMap);
+        console.log(consultation);
 
         const targetUser = usersMap[consultation.user_id];
-        const user = {
+        const tempUser = {
           ...targetUser,
           name: targetUser.fields.name,
           children: targetUser.fields.children ? JSON.parse(targetUser.fields.children) : '',
+          picture: targetUser.fields?.picture || '',
         };
+
         const targetConsultation = {
           ...consultation,
-          user: user,
+          user: tempUser,
         };
 
         let responseList = consultationResponse
           .map((item) => {
             if (item.fields.consultation_id[0] === consultationId) {
+              console.log(item);
               const user = {
                 id: usersMap[item.fields.user_id[0]].id,
                 name: usersMap[item.fields.user_id[0]].fields.name,
-                // TODO: エラーになるので一旦コメントアウト
-                // children: JSON.parse(usersMap[item.fields.user_id[0]].fields.children),
+                children: usersMap[item.fields.user_id[0]].fields.children
+                  ? JSON.parse(usersMap[item.fields.user_id[0]].fields.children)
+                  : [],
+                picture: usersMap[item.fields.user_id[0]].fields.picture
+                  ? usersMap[item.fields.user_id[0]].fields.picture
+                  : '',
               };
               return {
                 ...item,
@@ -108,8 +130,11 @@ export default function ConsultationDetail() {
           .filter((item) => item !== undefined);
 
         responseList.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+
         setConsultationResponse(responseList);
         setConsultation(targetConsultation);
+        setIsFavorite(favorite.length > 0);
+        setFavoriteId(favorite.length > 0 ? favorite[0].id : null);
       } catch (error) {
         console.error('An error occurred:', error);
       } finally {
@@ -119,6 +144,83 @@ export default function ConsultationDetail() {
 
     getInitData();
   }, []);
+
+  const FavoriteButton = () => {
+    const [buttonStyle, setButtonStyle] = useState({});
+
+    const FavoriteButtonStyle = {
+      width: '110px',
+      height: '20px',
+      fontSize: '10px',
+      borderRadius: '999px',
+      backgroundColor: '#EB6159',
+      color: '#FFFFFF',
+      fontWeight: 'bold',
+      textTransform: 'none',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      '&:hover': {
+        backgroundColor: '#EB6159',
+        opacity: 0.7,
+      },
+    };
+
+    const UnfavoriteButtonStyle = {
+      width: '110px',
+      height: '20px',
+      fontSize: '10px',
+      borderRadius: '999px',
+      backgroundColor: '#808080',
+      color: '#FFFFFF',
+      fontWeight: 'normal',
+      textTransform: 'none',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      '&:hover': {
+        backgroundColor: '#808080',
+        opacity: 0.7,
+      },
+    };
+
+    useEffect(() => {
+      if (isFavorite) {
+        setButtonStyle(FavoriteButtonStyle);
+      } else {
+        setButtonStyle(UnfavoriteButtonStyle);
+      }
+    }, [isFavorite]);
+
+    const handleFavorite = async () => {
+      try {
+        if (isFavorite) {
+          await deleteData({id: favoriteId}, 'deleteFavorites').then((res) => {
+            setIsFavorite(false);
+            setFavoriteId(null);
+          });
+        } else {
+          const payload = {
+            consultationId: [consultationId],
+            userId: [myAccountData.id],
+          };
+          await postData(payload, 'postFavorites').then((res) => {
+            setIsFavorite(true);
+            setFavoriteId(res.id);
+          });
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      }
+    };
+
+    return (
+      <Button sx={buttonStyle} onClick={handleFavorite}>
+        お気に入り
+        <StarsSharpIcon fontSize={'small'} />
+      </Button>
+    );
+  };
 
   return (
     <BaseLayout>
@@ -130,7 +232,7 @@ export default function ConsultationDetail() {
             <SearchInput />
           </Box>
           <Container maxWidth="sm" sx={ContainerStyle}>
-            <SpeechBubble user={consultation.user} isDispFavoButoon="true">
+            <SpeechBubble user={consultation.user} favoriteButton={<FavoriteButton />}>
               <Typography sx={{ fontSize: '12px' }}>{consultation.content}</Typography>
             </SpeechBubble>
             <ConsultationResponseList list={consultationResponse} />
