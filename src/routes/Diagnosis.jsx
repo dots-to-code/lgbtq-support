@@ -57,36 +57,7 @@ export default function Diagnosis() {
       } catch (error) {
         console.error('Error fetching default images:', error);
         setAiImages([
-          // {
-          //   revised_prompt:
-          //     'Generate an image showcasing different beautiful outfit ideas for a 4-year-old child, predominantly featuring various shades of blue. The outfits should be aspiring, covering all seasons, and include details such as jackets, dresses, hats, scarves, shoes, and socks. The clothing pieces should demonstrate a mix of textures, patterns, and designs, and should be styled in an aesthetic way to evoke a sense of inspiration. The backdrop could be a minimalist, neutral tone to keep the focus on the outfits.',
-          //   url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-Itu6A6q1sfgadrTzrb41aHCm/user-ms47bQMLzXS6ptoY5G1EXX6h/img-mQ19vTdvp6fjy6B0Tt6lC3s7.png?st=2024-03-24T11%3A01%3A58Z&se=2024-03-24T13%3A01%3A58Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-03-23T21%3A06%3A53Z&ske=2024-03-24T21%3A06%3A53Z&sks=b&skv=2021-08-06&sig=Dcr6UuV3astfsUe3WxTjBMmjMfmTOwzuzgg676Xoffw%3D',
-          // },
-          // {
-          //   revised_prompt:
-          //     "Imagine an array of various natural style outfits designed for a 6-year-old child. These outfits should predominantly feature pale colors. They may include items like light cotton tunics, linen trousers, soft knit sweaters, and comfortable footwear. Each outfit should not only be functional but also designed with a touch of playfulness to appeal to a child's sense of fun. Picture these outfits neatly arranged in a pastel-colored room with soft lighting.",
-          //   url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-Itu6A6q1sfgadrTzrb41aHCm/user-ms47bQMLzXS6ptoY5G1EXX6h/img-8Ld4d95Eu1nuS9fKcnJVhgx2.png?st=2024-03-24T10%3A59%3A20Z&se=2024-03-24T12%3A59%3A20Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-03-23T21%3A32%3A37Z&ske=2024-03-24T21%3A32%3A37Z&sks=b&skv=2021-08-06&sig=lNwfsoBZYNO6lK8GBEwY311FMUvsU%2BBLoNBB50zP1Bw%3D',
-          // },
-          // {
-          //   revised_prompt:
-          //     'Imagine a stylish wardrobe collection for a 7-year-old child. This repertoire includes soft, pastel-colored outfits that exhibit feminine charm. Visualize beautiful dresses with flowery patterns, light ruffles, and ribbons adorning them. The assortment also consists of an adorable hat, bloomers, and matching footwear, all curated with the same delicate color palette. Picture these clothes neatly displayed against a white background, highlighting their intricate details, texture, and aesthetic appeal.',
-          //   url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-Itu6A6q1sfgadrTzrb41aHCm/user-ms47bQMLzXS6ptoY5G1EXX6h/img-aCfmqVTIB0OULI7uKUdWqoz9.png?st=2024-03-24T10%3A53%3A07Z&se=2024-03-24T12%3A53%3A07Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-03-23T23%3A26%3A36Z&ske=2024-03-24T23%3A26%3A36Z&sks=b&skv=2021-08-06&sig=Z%2Bp1XGoSJDDqW8BUroSfrdq/JCBLdbr4zNPRKwlgPg4%3D',
-          // },
-          // {
-          //   revised_prompt:
-          //     'Imagine a collection of feminine-styled outfits suitable for a 16-year-old individual. The clothes should be primarily in soft, pale colors, like pastels. The set could include items such as lightweight sweaters, ruffled skirts, floral printed dresses, and comfortable shoes. Accessories might involve, for instance, patterned headbands, delicate bracelets, and small, classy handbags. The fabrics used are noticeably soft and have a graceful flow to them. Aesthetics of the elements should communicate youthfulness, sophistication, and charm.',
-          //   url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-Itu6A6q1sfgadrTzrb41aHCm/user-ms47bQMLzXS6ptoY5G1EXX6h/img-VNuvm1hLbajKPRLcQORWViM7.png?st=2024-03-24T10%3A41%3A30Z&se=2024-03-24T12%3A41%3A30Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-03-23T21%3A12%3A51Z&ske=2024-03-24T21%3A12%3A51Z&sks=b&skv=2021-08-06&sig=WEKgFNd829CtAzKjP/zUjo7Ui8GW/dg8UqkxT%2Bnw31M%3D',
-          // },
-          // {
-          //   revised_prompt:
-          //     'Create an image showcasing a diverse range of stylish outfits suited for a 6-year-old child. All of these outfits should be designed in subtle, pale colors that allow for a mild and calming aesthetic. These looks could range from casual to formal to adventurous, always keeping the comfort and appeal to a child in mind.',
-          //   url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-Itu6A6q1sfgadrTzrb41aHCm/user-ms47bQMLzXS6ptoY5G1EXX6h/img-mZzQlrktHnSHp1yWCFHoPy2S.png?st=2024-03-24T10%3A22%3A03Z&se=2024-03-24T12%3A22%3A03Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-03-23T21%3A26%3A23Z&ske=2024-03-24T21%3A26%3A23Z&sks=b&skv=2021-08-06&sig=Ib2%2BDKyVUXhBwfUsiNdiC9QFomUaOzkc2/CSm9pq0KA%3D',
-          // },
-          // {
-          //   revised_prompt:
-          //     'Generate an image displaying a range of trendy and fashionable outfits, suitable for an 18 year old individual. Concentrate on designs that utilize dark colors such as black, grey, or deep navy. Display this array of outfits with a variety of different clothing pieces, like jackets, jeans, skirts, shoes, and accessories, showcasing the many ways one can stylishly use dark colors.',
-          //   url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-Itu6A6q1sfgadrTzrb41aHCm/user-ms47bQMLzXS6ptoY5G1EXX6h/img-MPfTJMkaahJtFTTnDSrg9irs.png?st=2024-03-24T10%3A30%3A50Z&se=2024-03-24T12%3A30%3A50Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-03-23T18%3A46%3A00Z&ske=2024-03-24T18%3A46%3A00Z&sks=b&skv=2021-08-06&sig=tQv21s512YpGJ76fHIHu7q1AaeKndhpFGe/h39/E6iA%3D',
-          // },
+          // fallback images if request fails
           {
             url: '/assets/mocks/mock1.png',
           },
